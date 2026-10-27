@@ -27,6 +27,12 @@ npm run build
 - Un JSON dañado no se borra ni se reinicia. La API responde con diagnóstico y lista los respaldos restaurables.
 - Los usuarios de demostración contienen hashes bcrypt, nunca contraseñas en texto plano.
 
+### Despliegue en Vercel
+
+El sistema de archivos del despliegue es de solo lectura. Cuando detecta Vercel, la aplicación copia el JSON inicial a `/tmp/vigente-remuneraciones/` para permitir altas, ediciones y respaldos durante la vida de la instancia. Ese directorio es temporal y puede reiniciarse en un nuevo despliegue o instancia.
+
+Para conservar cambios entre reinicios, configure `VIGENTE_DATA_PATH` con la ruta de un volumen persistente compatible con el proveedor. En Vercel estándar, una base de datos o un servicio de almacenamiento externo es necesario para persistencia real; `/tmp` evita el `EROFS`, pero no sustituye ese almacenamiento.
+
 ## Convenciones de cálculo
 
 - Dinero: cadenas decimales con dos posiciones (`"2400.00"`).

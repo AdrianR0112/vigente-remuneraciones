@@ -3,9 +3,12 @@ import path from "node:path";
 import { validateData, type VigenteData } from "./schema";
 import "server-only";
 
+const BUNDLED_DATA_PATH = path.join(process.cwd(), "data", "vigente.json");
 const DATA_PATH = process.env.VIGENTE_DATA_PATH
   ? path.resolve(process.env.VIGENTE_DATA_PATH)
-  : path.join(process.cwd(), "data", "vigente.json");
+  : process.env.VERCEL
+    ? path.join("/tmp", "vigente-remuneraciones", "vigente.json")
+    : BUNDLED_DATA_PATH;
 const BACKUP_DIR = path.join(path.dirname(DATA_PATH), "backups");
 
 let writeQueue: Promise<unknown> = Promise.resolve();
@@ -20,6 +23,14 @@ export class CorruptDataError extends Error {
 async function ensureDirectories() {
   await fs.mkdir(path.dirname(DATA_PATH), { recursive: true });
   await fs.mkdir(BACKUP_DIR, { recursive: true });
+  if (DATA_PATH !== BUNDLED_DATA_PATH) {
+    try {
+      await fs.access(DATA_PATH);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      await fs.copyFile(BUNDLED_DATA_PATH, DATA_PATH);
+    }
+  }
 }
 
 export async function readData(): Promise<VigenteData> {
