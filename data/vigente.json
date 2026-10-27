@@ -1,0 +1,1815 @@
+{
+  "schemaVersion": 1,
+  "version": 3,
+  "updatedAt": "2026-10-27T18:29:50.389Z",
+  "empresa": {
+    "id": "EMP-VIGENTE",
+    "nombre": "Vigente",
+    "actividad": "Desarrollo y mantenimiento de software",
+    "sector": "Privado",
+    "sede": "Quito",
+    "region": "Sierra",
+    "zonaHoraria": "America/Guayaquil",
+    "moneda": "USD",
+    "identificadorDemo": "EMPRESA-DEMO-SIN-RUC"
+  },
+  "parametrosLegales": [
+    {
+      "id": "PAR-SBU-2026",
+      "codigo": "SBU",
+      "nombre": "Salario básico unificado",
+      "valor": "482.00",
+      "unidad": "USD",
+      "vigenteDesde": "2026-01-01",
+      "vigenteHasta": "2026-12-31",
+      "fuenteId": "F-SBU-2026",
+      "estado": "Verificado"
+    },
+    {
+      "id": "PAR-IESS-P",
+      "codigo": "IESS_PERSONAL",
+      "nombre": "Aporte personal IESS",
+      "valor": "0.0945",
+      "unidad": "tasa",
+      "vigenteDesde": "2026-01-01",
+      "vigenteHasta": null,
+      "fuenteId": "F-IESS-APORTES",
+      "estado": "Verificado"
+    },
+    {
+      "id": "PAR-IESS-E",
+      "codigo": "IESS_PATRONAL",
+      "nombre": "Aporte patronal IESS",
+      "valor": "0.1115",
+      "unidad": "tasa",
+      "vigenteDesde": "2026-01-01",
+      "vigenteHasta": null,
+      "fuenteId": "F-IESS-APORTES",
+      "estado": "Verificado"
+    },
+    {
+      "id": "PAR-RESERVA",
+      "codigo": "FONDO_RESERVA",
+      "nombre": "Fondo de reserva referencial",
+      "valor": "0.0833",
+      "unidad": "tasa",
+      "vigenteDesde": "2026-01-01",
+      "vigenteHasta": null,
+      "fuenteId": "F-CODIGO-TRABAJO",
+      "estado": "Pendiente",
+      "nota": "Tasa inicial del escenario; confirmar regla operativa de fracciones y reingresos antes de uso real."
+    },
+    {
+      "id": "PAR-SUPL",
+      "codigo": "RECARGO_SUPLEMENTARIA",
+      "nombre": "Factor de hora suplementaria",
+      "valor": "1.50",
+      "unidad": "factor",
+      "vigenteDesde": "2026-01-01",
+      "vigenteHasta": null,
+      "fuenteId": "F-CODIGO-TRABAJO",
+      "estado": "Verificado"
+    },
+    {
+      "id": "PAR-EXTRA",
+      "codigo": "RECARGO_EXTRAORDINARIA",
+      "nombre": "Factor de hora extraordinaria",
+      "valor": "2.00",
+      "unidad": "factor",
+      "vigenteDesde": "2026-01-01",
+      "vigenteHasta": null,
+      "fuenteId": "F-CODIGO-TRABAJO",
+      "estado": "Verificado"
+    },
+    {
+      "id": "PAR-NOC",
+      "codigo": "RECARGO_NOCTURNO",
+      "nombre": "Recargo nocturno ordinario",
+      "valor": "0.25",
+      "unidad": "tasa",
+      "vigenteDesde": "2026-01-01",
+      "vigenteHasta": null,
+      "fuenteId": "F-CODIGO-TRABAJO",
+      "estado": "Verificado"
+    }
+  ],
+  "fuentesNormativas": [
+    {
+      "id": "F-SBU-2026",
+      "entidad": "Ministerio del Trabajo y Desarrollo Humano",
+      "titulo": "Acuerdo de salario básico unificado 2026",
+      "articulo": "Artículo único",
+      "url": "https://www.trabajo.gob.ec/wp-content/plugins/download-monitor/download.php?force=1&id=4933",
+      "consultadaEl": "2026-10-27",
+      "vigencia": "Desde 2026-01-01",
+      "estado": "Verificado",
+      "nota": "Fija el SBU 2026 en USD 482.00."
+    },
+    {
+      "id": "F-IESS-APORTES",
+      "entidad": "IESS",
+      "titulo": "Aportes del trabajador privado bajo relación de dependencia",
+      "articulo": null,
+      "url": "https://www.iess.gob.ec/es/web/afiliado/servicios-y-prestaciones",
+      "consultadaEl": "2026-10-27",
+      "vigencia": "Consulta vigente",
+      "estado": "Verificado",
+      "nota": "Personal 9.45%; patronal 11.15%."
+    },
+    {
+      "id": "F-CODIGO-TRABAJO",
+      "entidad": "Ministerio del Trabajo",
+      "titulo": "Código del Trabajo",
+      "articulo": "Arts. 47, 49, 55, 69, 95, 97, 111, 113 y 196",
+      "url": "https://www.trabajo.gob.ec/wp-content/uploads/downloads/2024/01/CODIGO_DEL_TRABAJO.pdf",
+      "consultadaEl": "2026-10-27",
+      "vigencia": "Texto oficial disponible; verificar reformas posteriores por artículo",
+      "estado": "Verificado"
+    },
+    {
+      "id": "F-HORARIOS-2026",
+      "entidad": "Ministerio del Trabajo",
+      "titulo": "Acuerdo Ministerial MDT-2026-059",
+      "articulo": "Arts. 4 y 7",
+      "url": "https://www.trabajo.gob.ec/wp-content/uploads/2026/03/2.7-ACUERDO-MINISTERIAL-MDT-2026-059.pdf",
+      "consultadaEl": "2026-10-27",
+      "vigencia": "2026",
+      "estado": "Verificado",
+      "nota": "Horarios especiales requieren condiciones, consentimiento y procedimiento; esta demostración usa jornada ordinaria."
+    },
+    {
+      "id": "F-SRI-IR-2026",
+      "entidad": "SRI",
+      "titulo": "Tabla de impuesto a la renta de personas naturales 2026",
+      "articulo": "Resolución NAC-DGERCGC25-00000043",
+      "url": "https://www.sri.gob.ec/o/sri-portlet-biblioteca-alfresco-internet/descargar/58a7f4f6-ab51-48b6-b9ff-a8e97e1a28ef/Tablas%20de%20c%C3%A1lculo%20de%20Impuesto%20a%20la%20Renta.pdf",
+      "consultadaEl": "2026-10-27",
+      "vigencia": "Ejercicio 2026",
+      "estado": "Verificado",
+      "nota": "La tabla está cargada; la retención individual queda pendiente hasta registrar proyección y gastos personales."
+    },
+    {
+      "id": "F-ACADEMICA-33",
+      "entidad": "Material académico 3.3",
+      "titulo": "Estructura salarial y orgánico funcional",
+      "articulo": "Páginas 7 y 8, según transcripción del brief",
+      "url": null,
+      "consultadaEl": "2026-10-27",
+      "vigencia": "Referencia académica",
+      "estado": "Referencia académica",
+      "nota": "El PDF no fue adjuntado al proyecto; no se inventaron importes intermedios."
+    },
+    {
+      "id": "F-AUTORIZACION",
+      "entidad": "Vigente",
+      "titulo": "Autorización interna demostrativa",
+      "articulo": null,
+      "url": null,
+      "consultadaEl": "2026-10-27",
+      "vigencia": "Período octubre 2026",
+      "estado": "Simulado"
+    }
+  ],
+  "escalasOcupacionales": [
+    {
+      "id": "ESC-A",
+      "grupo": "A",
+      "niveles": [
+        "A",
+        "A1"
+      ],
+      "funcion": "Jefatura",
+      "fuenteId": "F-ACADEMICA-33",
+      "estado": "Referencia académica",
+      "nota": "A1 aparece como extremo superior TIC en la página 8; no existe A2 en la fuente transcrita."
+    },
+    {
+      "id": "ESC-B",
+      "grupo": "B",
+      "niveles": [
+        "B1",
+        "B2",
+        "B3"
+      ],
+      "funcion": "Supervisión",
+      "fuenteId": "F-ACADEMICA-33",
+      "estado": "Referencia académica"
+    },
+    {
+      "id": "ESC-C",
+      "grupo": "C",
+      "niveles": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "funcion": "Operación",
+      "fuenteId": "F-ACADEMICA-33",
+      "estado": "Referencia académica"
+    },
+    {
+      "id": "ESC-D",
+      "grupo": "D",
+      "niveles": [
+        "D1",
+        "D2"
+      ],
+      "funcion": "Asistencia",
+      "fuenteId": "F-ACADEMICA-33",
+      "estado": "Referencia académica"
+    },
+    {
+      "id": "ESC-E",
+      "grupo": "E",
+      "niveles": [
+        "E1",
+        "E2"
+      ],
+      "funcion": "Soporte",
+      "fuenteId": "F-ACADEMICA-33",
+      "estado": "Referencia académica"
+    }
+  ],
+  "minimosSectoriales": [
+    {
+      "id": "MIN-TIC-E2-2026",
+      "anio": 2026,
+      "comision": "12",
+      "rama": "Tecnología: Hardware y Software–TIC",
+      "ocupacionOficial": null,
+      "codigoOficial": null,
+      "nivel": "E2",
+      "minimo": "505.88",
+      "fuenteId": "F-ACADEMICA-33",
+      "vigencia": "2026",
+      "estado": "Referencia académica",
+      "nota": "Referencia de extremo inferior; pendiente de contraste oficial por ocupación."
+    },
+    {
+      "id": "MIN-TIC-A1-2026",
+      "anio": 2026,
+      "comision": "12",
+      "rama": "Tecnología: Hardware y Software–TIC",
+      "ocupacionOficial": null,
+      "codigoOficial": null,
+      "nivel": "A1",
+      "minimo": "520.32",
+      "fuenteId": "F-ACADEMICA-33",
+      "vigencia": "2026",
+      "estado": "Referencia académica",
+      "nota": "No es un salario máximo empresarial. No se interpolan niveles intermedios."
+    }
+  ],
+  "bandasInternas": [
+    {
+      "id": "BANDA-A1",
+      "cargoId": "CAR-JEF",
+      "minimo": "2100.00",
+      "referencia": "2400.00",
+      "maximo": "2900.00",
+      "estado": "Simulado"
+    },
+    {
+      "id": "BANDA-B1",
+      "cargoId": "CAR-SUP",
+      "minimo": "1600.00",
+      "referencia": "1800.00",
+      "maximo": "2200.00",
+      "estado": "Simulado"
+    },
+    {
+      "id": "BANDA-C1",
+      "cargoId": "CAR-BACK",
+      "minimo": "1300.00",
+      "referencia": "1500.00",
+      "maximo": "1850.00",
+      "estado": "Simulado"
+    },
+    {
+      "id": "BANDA-C2",
+      "cargoId": "CAR-FRONT",
+      "minimo": "1150.00",
+      "referencia": "1350.00",
+      "maximo": "1700.00",
+      "estado": "Simulado"
+    },
+    {
+      "id": "BANDA-D1",
+      "cargoId": "CAR-QA",
+      "minimo": "850.00",
+      "referencia": "1000.00",
+      "maximo": "1250.00",
+      "estado": "Simulado"
+    },
+    {
+      "id": "BANDA-E2",
+      "cargoId": "CAR-SOP",
+      "minimo": "650.00",
+      "referencia": "750.00",
+      "maximo": "950.00",
+      "estado": "Simulado"
+    }
+  ],
+  "departamentos": [
+    {
+      "id": "DEP-TEC",
+      "nombre": "Tecnología",
+      "responsableTrabajadorId": "VIG-001",
+      "estado": "activo"
+    },
+    {
+      "id": "DEP-ADM",
+      "nombre": "Administración",
+      "responsableTrabajadorId": null,
+      "estado": "activo"
+    }
+  ],
+  "cargos": [
+    {
+      "id": "CAR-JEF",
+      "nombre": "Jefa de Desarrollo de Software",
+      "nivel": "A1",
+      "departamentoId": "DEP-TEC",
+      "superiorCargoId": null,
+      "objetivo": "Dirigir la entrega técnica y la evolución del producto.",
+      "funciones": [
+        "Definir arquitectura",
+        "Priorizar capacidad",
+        "Acompañar al equipo"
+      ],
+      "responsabilidades": [
+        "Calidad técnica",
+        "Planificación",
+        "Riesgos"
+      ],
+      "jornadaId": "HOR-ORD",
+      "modalidades": [
+        "Híbrida"
+      ],
+      "criterioSueldo": "Liderazgo, arquitectura y responsabilidad transversal; banda interna simulada."
+    },
+    {
+      "id": "CAR-SUP",
+      "nombre": "Supervisor de Desarrollo",
+      "nivel": "B1",
+      "departamentoId": "DEP-TEC",
+      "superiorCargoId": "CAR-JEF",
+      "objetivo": "Coordinar la ejecución diaria del equipo.",
+      "funciones": [
+        "Planificar iteraciones",
+        "Revisar entregas",
+        "Resolver bloqueos"
+      ],
+      "responsabilidades": [
+        "Flujo de entrega",
+        "Coordinación"
+      ],
+      "jornadaId": "HOR-ORD",
+      "modalidades": [
+        "Híbrida"
+      ],
+      "criterioSueldo": "Coordinación y supervisión; banda interna simulada."
+    },
+    {
+      "id": "CAR-BACK",
+      "nombre": "Desarrolladora Backend",
+      "nivel": "C1",
+      "departamentoId": "DEP-TEC",
+      "superiorCargoId": "CAR-SUP",
+      "objetivo": "Construir servicios seguros y mantenibles.",
+      "funciones": [
+        "Desarrollar APIs",
+        "Modelar datos",
+        "Automatizar pruebas"
+      ],
+      "responsabilidades": [
+        "Disponibilidad",
+        "Seguridad de servicios"
+      ],
+      "jornadaId": "HOR-ORD",
+      "modalidades": [
+        "Remota"
+      ],
+      "criterioSueldo": "Especialización backend; banda interna simulada."
+    },
+    {
+      "id": "CAR-FRONT",
+      "nombre": "Desarrollador Frontend",
+      "nivel": "C2",
+      "departamentoId": "DEP-TEC",
+      "superiorCargoId": "CAR-SUP",
+      "objetivo": "Crear interfaces accesibles y eficientes.",
+      "funciones": [
+        "Implementar interfaz",
+        "Mantener componentes",
+        "Probar accesibilidad"
+      ],
+      "responsabilidades": [
+        "Experiencia de usuario",
+        "Calidad de interfaz"
+      ],
+      "jornadaId": "HOR-ORD",
+      "modalidades": [
+        "Híbrida"
+      ],
+      "criterioSueldo": "Desarrollo de interfaz; banda interna simulada."
+    },
+    {
+      "id": "CAR-QA",
+      "nombre": "Asistente de QA y Pruebas",
+      "nivel": "D1",
+      "departamentoId": "DEP-TEC",
+      "superiorCargoId": "CAR-SUP",
+      "objetivo": "Prevenir defectos y documentar evidencia de calidad.",
+      "funciones": [
+        "Ejecutar pruebas",
+        "Registrar hallazgos",
+        "Preparar datos"
+      ],
+      "responsabilidades": [
+        "Evidencia de pruebas",
+        "Trazabilidad"
+      ],
+      "jornadaId": "HOR-ORD",
+      "modalidades": [
+        "Presencial"
+      ],
+      "criterioSueldo": "Asistencia especializada; banda interna simulada."
+    },
+    {
+      "id": "CAR-SOP",
+      "nombre": "Auxiliar de Soporte TI",
+      "nivel": "E2",
+      "departamentoId": "DEP-TEC",
+      "superiorCargoId": "CAR-SUP",
+      "objetivo": "Atender incidencias internas de primer nivel.",
+      "funciones": [
+        "Recibir tickets",
+        "Preparar equipos",
+        "Escalar incidentes"
+      ],
+      "responsabilidades": [
+        "Tiempos de respuesta",
+        "Inventario asignado"
+      ],
+      "jornadaId": "HOR-ORD",
+      "modalidades": [
+        "Presencial"
+      ],
+      "criterioSueldo": "Soporte inicial; banda interna simulada."
+    }
+  ],
+  "trabajadores": [
+    {
+      "id": "VIG-001",
+      "nombre": "Camila Torres",
+      "cargoId": "CAR-JEF",
+      "departamentoId": "DEP-TEC",
+      "ubicacion": "Quito",
+      "regionDecimoCuarto": "Sierra/Amazonía",
+      "fechaIngreso": "2020-02-01",
+      "sueldo": "2400.00",
+      "estado": "activo",
+      "modalidad": "Híbrida",
+      "decimoTercero": "Acumulado",
+      "decimoCuarto": "Acumulado",
+      "fondoReserva": "Acumula en IESS",
+      "identificacionDemo": "DEMO-VIG-001"
+    },
+    {
+      "id": "VIG-002",
+      "nombre": "Andrés Molina",
+      "cargoId": "CAR-SUP",
+      "departamentoId": "DEP-TEC",
+      "ubicacion": "Quito",
+      "regionDecimoCuarto": "Sierra/Amazonía",
+      "fechaIngreso": "2023-03-01",
+      "sueldo": "1800.00",
+      "estado": "activo",
+      "modalidad": "Híbrida",
+      "decimoTercero": "Mensual",
+      "decimoCuarto": "Acumulado",
+      "fondoReserva": "Pago directo",
+      "identificacionDemo": "DEMO-VIG-002"
+    },
+    {
+      "id": "VIG-003",
+      "nombre": "Daniela Ruiz",
+      "cargoId": "CAR-BACK",
+      "departamentoId": "DEP-TEC",
+      "ubicacion": "Quito",
+      "regionDecimoCuarto": "Sierra/Amazonía",
+      "fechaIngreso": "2024-06-01",
+      "sueldo": "1500.00",
+      "estado": "activo",
+      "modalidad": "Remota",
+      "decimoTercero": "Mensual",
+      "decimoCuarto": "Mensual",
+      "fondoReserva": "Acumula en IESS",
+      "identificacionDemo": "DEMO-VIG-003"
+    },
+    {
+      "id": "VIG-004",
+      "nombre": "Mateo Salazar",
+      "cargoId": "CAR-FRONT",
+      "departamentoId": "DEP-TEC",
+      "ubicacion": "Quito",
+      "regionDecimoCuarto": "Sierra/Amazonía",
+      "fechaIngreso": "2026-05-01",
+      "sueldo": "1300.00",
+      "estado": "activo",
+      "modalidad": "Híbrida",
+      "decimoTercero": "Acumulado",
+      "decimoCuarto": "Mensual",
+      "fondoReserva": "No cumple antigüedad",
+      "identificacionDemo": "DEMO-VIG-004"
+    },
+    {
+      "id": "VIG-005",
+      "nombre": "Valeria Paredes",
+      "cargoId": "CAR-QA",
+      "departamentoId": "DEP-TEC",
+      "ubicacion": "Quito",
+      "regionDecimoCuarto": "Sierra/Amazonía",
+      "fechaIngreso": "2025-10-01",
+      "sueldo": "950.00",
+      "estado": "activo",
+      "modalidad": "Presencial",
+      "decimoTercero": "Mensual",
+      "decimoCuarto": "Mensual",
+      "fondoReserva": "Pago directo",
+      "identificacionDemo": "DEMO-VIG-005"
+    },
+    {
+      "id": "VIG-006",
+      "nombre": "Nicolás Vega",
+      "cargoId": "CAR-SOP",
+      "departamentoId": "DEP-TEC",
+      "ubicacion": "Quito",
+      "regionDecimoCuarto": "Sierra/Amazonía",
+      "fechaIngreso": "2026-10-16",
+      "sueldo": "700.00",
+      "estado": "activo",
+      "modalidad": "Presencial",
+      "decimoTercero": "Mensual",
+      "decimoCuarto": "Mensual",
+      "fondoReserva": "No cumple antigüedad",
+      "identificacionDemo": "DEMO-VIG-006"
+    }
+  ],
+  "contratos": [
+    {
+      "id": "CON-001",
+      "trabajadorId": "VIG-001",
+      "tipo": "Indefinido",
+      "inicio": "2020-02-01",
+      "jornada": "Completa",
+      "estado": "vigente"
+    },
+    {
+      "id": "CON-002",
+      "trabajadorId": "VIG-002",
+      "tipo": "Indefinido",
+      "inicio": "2023-03-01",
+      "jornada": "Completa",
+      "estado": "vigente"
+    },
+    {
+      "id": "CON-003",
+      "trabajadorId": "VIG-003",
+      "tipo": "Indefinido",
+      "inicio": "2024-06-01",
+      "jornada": "Completa",
+      "estado": "vigente"
+    },
+    {
+      "id": "CON-004",
+      "trabajadorId": "VIG-004",
+      "tipo": "Indefinido",
+      "inicio": "2026-05-01",
+      "jornada": "Completa",
+      "estado": "vigente"
+    },
+    {
+      "id": "CON-005",
+      "trabajadorId": "VIG-005",
+      "tipo": "Indefinido",
+      "inicio": "2025-10-01",
+      "jornada": "Completa",
+      "estado": "vigente"
+    },
+    {
+      "id": "CON-006",
+      "trabajadorId": "VIG-006",
+      "tipo": "Indefinido",
+      "inicio": "2026-10-16",
+      "jornada": "Completa",
+      "estado": "vigente"
+    }
+  ],
+  "historialSalarial": [
+    {
+      "id": "SAL-001",
+      "trabajadorId": "VIG-001",
+      "desde": "2026-01-01",
+      "hasta": null,
+      "sueldo": "2400.00",
+      "estado": "Simulado"
+    },
+    {
+      "id": "SAL-002",
+      "trabajadorId": "VIG-002",
+      "desde": "2026-01-01",
+      "hasta": null,
+      "sueldo": "1800.00",
+      "estado": "Simulado"
+    },
+    {
+      "id": "SAL-003",
+      "trabajadorId": "VIG-003",
+      "desde": "2026-01-01",
+      "hasta": null,
+      "sueldo": "1500.00",
+      "estado": "Simulado"
+    },
+    {
+      "id": "SAL-004",
+      "trabajadorId": "VIG-004",
+      "desde": "2026-05-01",
+      "hasta": null,
+      "sueldo": "1300.00",
+      "estado": "Simulado"
+    },
+    {
+      "id": "SAL-005",
+      "trabajadorId": "VIG-005",
+      "desde": "2026-01-01",
+      "hasta": null,
+      "sueldo": "950.00",
+      "estado": "Simulado"
+    },
+    {
+      "id": "SAL-006",
+      "trabajadorId": "VIG-006",
+      "desde": "2026-10-16",
+      "hasta": null,
+      "sueldo": "700.00",
+      "estado": "Simulado"
+    }
+  ],
+  "horarios": [
+    {
+      "id": "HOR-ORD",
+      "nombre": "Jornada ordinaria diurna",
+      "dias": [
+        "lunes",
+        "martes",
+        "miércoles",
+        "jueves",
+        "viernes"
+      ],
+      "inicio": "09:00",
+      "fin": "18:00",
+      "pausaMinutos": 60,
+      "horasDiarias": "8.00",
+      "horasSemanales": "40.00",
+      "descanso": [
+        "sábado",
+        "domingo"
+      ],
+      "tipo": "ordinario",
+      "fuenteId": "F-CODIGO-TRABAJO"
+    }
+  ],
+  "feriados": [
+    {
+      "id": "FER-2026-10-09",
+      "fecha": "2026-10-09",
+      "nombre": "Independencia de Guayaquil",
+      "alcance": "nacional",
+      "trasladoAplicado": false,
+      "estado": "Pendiente",
+      "nota": "Validar calendario oficial y regla de traslado antes de clasificar horas."
+    }
+  ],
+  "novedades": [
+    {
+      "id": "NOV-001",
+      "trabajadorId": "VIG-002",
+      "periodoId": "PER-2026-10",
+      "tipo": "hora_suplementaria",
+      "fecha": "2026-10-06",
+      "horas": "2.00",
+      "inicio": "18:00",
+      "fin": "20:00",
+      "aprobada": true,
+      "observacion": "Cierre de iteración; demostración."
+    },
+    {
+      "id": "NOV-002",
+      "trabajadorId": "VIG-002",
+      "periodoId": "PER-2026-10",
+      "tipo": "hora_suplementaria",
+      "fecha": "2026-10-13",
+      "horas": "2.00",
+      "inicio": "18:00",
+      "fin": "20:00",
+      "aprobada": true,
+      "observacion": "Revisión de entrega; demostración."
+    },
+    {
+      "id": "NOV-003",
+      "trabajadorId": "VIG-003",
+      "periodoId": "PER-2026-10",
+      "tipo": "hora_suplementaria",
+      "fecha": "2026-10-05",
+      "horas": "4.00",
+      "inicio": "18:00",
+      "fin": "22:00",
+      "aprobada": true,
+      "observacion": "Mantenimiento programado; demostración."
+    },
+    {
+      "id": "NOV-004",
+      "trabajadorId": "VIG-003",
+      "periodoId": "PER-2026-10",
+      "tipo": "hora_suplementaria",
+      "fecha": "2026-10-12",
+      "horas": "4.00",
+      "inicio": "18:00",
+      "fin": "22:00",
+      "aprobada": true,
+      "observacion": "Mantenimiento programado; demostración."
+    },
+    {
+      "id": "NOV-005",
+      "trabajadorId": "VIG-003",
+      "periodoId": "PER-2026-10",
+      "tipo": "hora_extraordinaria",
+      "fecha": "2026-10-17",
+      "horas": "4.00",
+      "inicio": "09:00",
+      "fin": "13:00",
+      "aprobada": true,
+      "observacion": "Incidente en descanso semanal; demostración."
+    },
+    {
+      "id": "NOV-006",
+      "trabajadorId": "VIG-004",
+      "periodoId": "PER-2026-10",
+      "tipo": "bono_remunerativo",
+      "fecha": "2026-10-20",
+      "valor": "100.00",
+      "aprobada": true,
+      "observacion": "Bono remunerativo simulado con incidencia IESS y D13."
+    },
+    {
+      "id": "NOV-007",
+      "trabajadorId": "VIG-005",
+      "periodoId": "PER-2026-10",
+      "tipo": "anticipo",
+      "fecha": "2026-10-15",
+      "valor": "50.00",
+      "aprobada": true,
+      "observacion": "Anticipo autorizado; respaldo interno simulado."
+    }
+  ],
+  "periodos": [
+    {
+      "id": "PER-2026-10",
+      "nombre": "Octubre 2026",
+      "inicio": "2026-10-01",
+      "fin": "2026-10-31",
+      "estado": "calculado",
+      "versionCalculo": 2,
+      "aprobadoAt": null,
+      "pagadoAt": null,
+      "cerradoAt": null
+    }
+  ],
+  "rolesPago": [
+    {
+      "id": "ROL-PER-2026-10-VIG-001",
+      "versionCalculo": 1,
+      "periodoId": "PER-2026-10",
+      "trabajadorId": "VIG-001",
+      "estado": "calculado",
+      "conceptos": [
+        {
+          "codigo": "SUELDO",
+          "nombre": "Sueldo proporcional",
+          "tipo": "ingreso",
+          "base": "2400.00",
+          "formula": "sueldo / 30 × días pagados",
+          "cantidad": "30",
+          "tasa": "1.00",
+          "resultado": "2400.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HES",
+          "nombre": "Horas suplementarias",
+          "tipo": "ingreso",
+          "base": "10.00",
+          "formula": "valor hora × 1.50 × horas",
+          "cantidad": "0",
+          "tasa": "1.50",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HEX",
+          "nombre": "Horas extraordinarias",
+          "tipo": "ingreso",
+          "base": "10.00",
+          "formula": "valor hora × 2.00 × horas",
+          "cantidad": "0",
+          "tasa": "2.00",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "NOCT",
+          "nombre": "Recargo nocturno",
+          "tipo": "ingreso",
+          "base": "10.00",
+          "formula": "valor hora × 0.25 × horas nocturnas",
+          "cantidad": "0",
+          "tasa": "0.25",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "BONO",
+          "nombre": "Bono remunerativo",
+          "tipo": "ingreso",
+          "base": "0.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "IESS-P",
+          "nombre": "Aporte personal IESS",
+          "tipo": "descuento",
+          "base": "2400.00",
+          "formula": "base aportable × 9.45%",
+          "cantidad": "1",
+          "tasa": "0.0945",
+          "resultado": "226.80",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "ANT",
+          "nombre": "Anticipo autorizado",
+          "tipo": "descuento",
+          "base": "0.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "0.00",
+          "fuenteId": "F-AUTORIZACION"
+        },
+        {
+          "codigo": "IESS-E",
+          "nombre": "Aporte patronal IESS",
+          "tipo": "obligacion",
+          "base": "2400.00",
+          "formula": "base aportable × 11.15%",
+          "cantidad": "1",
+          "tasa": "0.1115",
+          "resultado": "267.60",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "D13",
+          "nombre": "Décimo tercero devengado",
+          "tipo": "acumulacion",
+          "base": "2400.00",
+          "formula": "remuneración computable / 12",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "200.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "D14",
+          "nombre": "Décimo cuarto devengado",
+          "tipo": "acumulacion",
+          "base": "482.00",
+          "formula": "SBU / 12 × fracción del mes",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "40.17",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "FR",
+          "nombre": "Fondo de reserva",
+          "tipo": "acumulacion",
+          "base": "2400.00",
+          "formula": "base aportable × 8.33%",
+          "cantidad": "1",
+          "tasa": "0.0833",
+          "resultado": "199.92",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "VAC",
+          "nombre": "Provisión de vacaciones",
+          "tipo": "provision",
+          "base": "2400.00",
+          "formula": "remuneración computable / 24",
+          "cantidad": "1",
+          "tasa": "0.0416666667",
+          "resultado": "100.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        }
+      ],
+      "totales": {
+        "remuneracionAportable": "2400.00",
+        "remuneracionBruta": "2400.00",
+        "beneficiosPagadosDirectos": "0.00",
+        "descuentos": "226.80",
+        "netoProvisional": "2173.20",
+        "obligacionesPatronales": "267.60",
+        "provisionesYAcumulaciones": "540.09",
+        "costoDevengado": "3207.69",
+        "desembolso": "2440.80"
+      },
+      "alertas": [
+        "Retención de impuesto a la renta: cálculo definitivo requiere proyección anual y rebaja por gastos personales."
+      ]
+    },
+    {
+      "id": "ROL-PER-2026-10-VIG-002",
+      "versionCalculo": 1,
+      "periodoId": "PER-2026-10",
+      "trabajadorId": "VIG-002",
+      "estado": "calculado",
+      "conceptos": [
+        {
+          "codigo": "SUELDO",
+          "nombre": "Sueldo proporcional",
+          "tipo": "ingreso",
+          "base": "1800.00",
+          "formula": "sueldo / 30 × días pagados",
+          "cantidad": "30",
+          "tasa": "1.00",
+          "resultado": "1800.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HES",
+          "nombre": "Horas suplementarias",
+          "tipo": "ingreso",
+          "base": "7.50",
+          "formula": "valor hora × 1.50 × horas",
+          "cantidad": "4",
+          "tasa": "1.50",
+          "resultado": "45.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HEX",
+          "nombre": "Horas extraordinarias",
+          "tipo": "ingreso",
+          "base": "7.50",
+          "formula": "valor hora × 2.00 × horas",
+          "cantidad": "0",
+          "tasa": "2.00",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "NOCT",
+          "nombre": "Recargo nocturno",
+          "tipo": "ingreso",
+          "base": "7.50",
+          "formula": "valor hora × 0.25 × horas nocturnas",
+          "cantidad": "0",
+          "tasa": "0.25",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "BONO",
+          "nombre": "Bono remunerativo",
+          "tipo": "ingreso",
+          "base": "0.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "IESS-P",
+          "nombre": "Aporte personal IESS",
+          "tipo": "descuento",
+          "base": "1845.00",
+          "formula": "base aportable × 9.45%",
+          "cantidad": "1",
+          "tasa": "0.0945",
+          "resultado": "174.35",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "ANT",
+          "nombre": "Anticipo autorizado",
+          "tipo": "descuento",
+          "base": "0.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "0.00",
+          "fuenteId": "F-AUTORIZACION"
+        },
+        {
+          "codigo": "IESS-E",
+          "nombre": "Aporte patronal IESS",
+          "tipo": "obligacion",
+          "base": "1845.00",
+          "formula": "base aportable × 11.15%",
+          "cantidad": "1",
+          "tasa": "0.1115",
+          "resultado": "205.72",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "D13",
+          "nombre": "Décimo tercero devengado",
+          "tipo": "ingreso",
+          "base": "1845.00",
+          "formula": "remuneración computable / 12",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "153.75",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "D14",
+          "nombre": "Décimo cuarto devengado",
+          "tipo": "acumulacion",
+          "base": "482.00",
+          "formula": "SBU / 12 × fracción del mes",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "40.17",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "FR",
+          "nombre": "Fondo de reserva",
+          "tipo": "ingreso",
+          "base": "1845.00",
+          "formula": "base aportable × 8.33%",
+          "cantidad": "1",
+          "tasa": "0.0833",
+          "resultado": "153.69",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "VAC",
+          "nombre": "Provisión de vacaciones",
+          "tipo": "provision",
+          "base": "1845.00",
+          "formula": "remuneración computable / 24",
+          "cantidad": "1",
+          "tasa": "0.0416666667",
+          "resultado": "76.88",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        }
+      ],
+      "totales": {
+        "remuneracionAportable": "1845.00",
+        "remuneracionBruta": "2152.44",
+        "beneficiosPagadosDirectos": "307.44",
+        "descuentos": "174.35",
+        "netoProvisional": "1978.09",
+        "obligacionesPatronales": "205.72",
+        "provisionesYAcumulaciones": "117.05",
+        "costoDevengado": "2475.20",
+        "desembolso": "2183.81"
+      },
+      "alertas": [
+        "Retención de impuesto a la renta: cálculo definitivo requiere proyección anual y rebaja por gastos personales."
+      ]
+    },
+    {
+      "id": "ROL-PER-2026-10-VIG-003",
+      "versionCalculo": 1,
+      "periodoId": "PER-2026-10",
+      "trabajadorId": "VIG-003",
+      "estado": "calculado",
+      "conceptos": [
+        {
+          "codigo": "SUELDO",
+          "nombre": "Sueldo proporcional",
+          "tipo": "ingreso",
+          "base": "1500.00",
+          "formula": "sueldo / 30 × días pagados",
+          "cantidad": "30",
+          "tasa": "1.00",
+          "resultado": "1500.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HES",
+          "nombre": "Horas suplementarias",
+          "tipo": "ingreso",
+          "base": "6.25",
+          "formula": "valor hora × 1.50 × horas",
+          "cantidad": "8",
+          "tasa": "1.50",
+          "resultado": "75.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HEX",
+          "nombre": "Horas extraordinarias",
+          "tipo": "ingreso",
+          "base": "6.25",
+          "formula": "valor hora × 2.00 × horas",
+          "cantidad": "4",
+          "tasa": "2.00",
+          "resultado": "50.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "NOCT",
+          "nombre": "Recargo nocturno",
+          "tipo": "ingreso",
+          "base": "6.25",
+          "formula": "valor hora × 0.25 × horas nocturnas",
+          "cantidad": "0",
+          "tasa": "0.25",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "BONO",
+          "nombre": "Bono remunerativo",
+          "tipo": "ingreso",
+          "base": "0.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "IESS-P",
+          "nombre": "Aporte personal IESS",
+          "tipo": "descuento",
+          "base": "1625.00",
+          "formula": "base aportable × 9.45%",
+          "cantidad": "1",
+          "tasa": "0.0945",
+          "resultado": "153.56",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "ANT",
+          "nombre": "Anticipo autorizado",
+          "tipo": "descuento",
+          "base": "0.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "0.00",
+          "fuenteId": "F-AUTORIZACION"
+        },
+        {
+          "codigo": "IESS-E",
+          "nombre": "Aporte patronal IESS",
+          "tipo": "obligacion",
+          "base": "1625.00",
+          "formula": "base aportable × 11.15%",
+          "cantidad": "1",
+          "tasa": "0.1115",
+          "resultado": "181.19",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "D13",
+          "nombre": "Décimo tercero devengado",
+          "tipo": "ingreso",
+          "base": "1625.00",
+          "formula": "remuneración computable / 12",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "135.42",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "D14",
+          "nombre": "Décimo cuarto devengado",
+          "tipo": "ingreso",
+          "base": "482.00",
+          "formula": "SBU / 12 × fracción del mes",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "40.17",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "FR",
+          "nombre": "Fondo de reserva",
+          "tipo": "acumulacion",
+          "base": "1625.00",
+          "formula": "base aportable × 8.33%",
+          "cantidad": "1",
+          "tasa": "0.0833",
+          "resultado": "135.36",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "VAC",
+          "nombre": "Provisión de vacaciones",
+          "tipo": "provision",
+          "base": "1625.00",
+          "formula": "remuneración computable / 24",
+          "cantidad": "1",
+          "tasa": "0.0416666667",
+          "resultado": "67.71",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        }
+      ],
+      "totales": {
+        "remuneracionAportable": "1625.00",
+        "remuneracionBruta": "1800.59",
+        "beneficiosPagadosDirectos": "175.59",
+        "descuentos": "153.56",
+        "netoProvisional": "1647.03",
+        "obligacionesPatronales": "181.19",
+        "provisionesYAcumulaciones": "203.07",
+        "costoDevengado": "2184.84",
+        "desembolso": "1828.22"
+      },
+      "alertas": [
+        "Retención de impuesto a la renta: cálculo definitivo requiere proyección anual y rebaja por gastos personales."
+      ]
+    },
+    {
+      "id": "ROL-PER-2026-10-VIG-004",
+      "versionCalculo": 1,
+      "periodoId": "PER-2026-10",
+      "trabajadorId": "VIG-004",
+      "estado": "calculado",
+      "conceptos": [
+        {
+          "codigo": "SUELDO",
+          "nombre": "Sueldo proporcional",
+          "tipo": "ingreso",
+          "base": "1300.00",
+          "formula": "sueldo / 30 × días pagados",
+          "cantidad": "30",
+          "tasa": "1.00",
+          "resultado": "1300.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HES",
+          "nombre": "Horas suplementarias",
+          "tipo": "ingreso",
+          "base": "5.42",
+          "formula": "valor hora × 1.50 × horas",
+          "cantidad": "0",
+          "tasa": "1.50",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HEX",
+          "nombre": "Horas extraordinarias",
+          "tipo": "ingreso",
+          "base": "5.42",
+          "formula": "valor hora × 2.00 × horas",
+          "cantidad": "0",
+          "tasa": "2.00",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "NOCT",
+          "nombre": "Recargo nocturno",
+          "tipo": "ingreso",
+          "base": "5.42",
+          "formula": "valor hora × 0.25 × horas nocturnas",
+          "cantidad": "0",
+          "tasa": "0.25",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "BONO",
+          "nombre": "Bono remunerativo",
+          "tipo": "ingreso",
+          "base": "100.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "100.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "IESS-P",
+          "nombre": "Aporte personal IESS",
+          "tipo": "descuento",
+          "base": "1400.00",
+          "formula": "base aportable × 9.45%",
+          "cantidad": "1",
+          "tasa": "0.0945",
+          "resultado": "132.30",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "ANT",
+          "nombre": "Anticipo autorizado",
+          "tipo": "descuento",
+          "base": "0.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "0.00",
+          "fuenteId": "F-AUTORIZACION"
+        },
+        {
+          "codigo": "IESS-E",
+          "nombre": "Aporte patronal IESS",
+          "tipo": "obligacion",
+          "base": "1400.00",
+          "formula": "base aportable × 11.15%",
+          "cantidad": "1",
+          "tasa": "0.1115",
+          "resultado": "156.10",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "D13",
+          "nombre": "Décimo tercero devengado",
+          "tipo": "acumulacion",
+          "base": "1400.00",
+          "formula": "remuneración computable / 12",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "116.67",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "D14",
+          "nombre": "Décimo cuarto devengado",
+          "tipo": "ingreso",
+          "base": "482.00",
+          "formula": "SBU / 12 × fracción del mes",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "40.17",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "FR",
+          "nombre": "Fondo de reserva",
+          "tipo": "acumulacion",
+          "base": "1400.00",
+          "formula": "no cumple un año",
+          "cantidad": "1",
+          "tasa": "0",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "VAC",
+          "nombre": "Provisión de vacaciones",
+          "tipo": "provision",
+          "base": "1400.00",
+          "formula": "remuneración computable / 24",
+          "cantidad": "1",
+          "tasa": "0.0416666667",
+          "resultado": "58.33",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        }
+      ],
+      "totales": {
+        "remuneracionAportable": "1400.00",
+        "remuneracionBruta": "1440.17",
+        "beneficiosPagadosDirectos": "40.17",
+        "descuentos": "132.30",
+        "netoProvisional": "1307.87",
+        "obligacionesPatronales": "156.10",
+        "provisionesYAcumulaciones": "175.00",
+        "costoDevengado": "1771.27",
+        "desembolso": "1463.97"
+      },
+      "alertas": [
+        "Retención de impuesto a la renta: cálculo definitivo requiere proyección anual y rebaja por gastos personales."
+      ]
+    },
+    {
+      "id": "ROL-PER-2026-10-VIG-005",
+      "versionCalculo": 1,
+      "periodoId": "PER-2026-10",
+      "trabajadorId": "VIG-005",
+      "estado": "calculado",
+      "conceptos": [
+        {
+          "codigo": "SUELDO",
+          "nombre": "Sueldo proporcional",
+          "tipo": "ingreso",
+          "base": "950.00",
+          "formula": "sueldo / 30 × días pagados",
+          "cantidad": "30",
+          "tasa": "1.00",
+          "resultado": "950.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HES",
+          "nombre": "Horas suplementarias",
+          "tipo": "ingreso",
+          "base": "3.96",
+          "formula": "valor hora × 1.50 × horas",
+          "cantidad": "0",
+          "tasa": "1.50",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HEX",
+          "nombre": "Horas extraordinarias",
+          "tipo": "ingreso",
+          "base": "3.96",
+          "formula": "valor hora × 2.00 × horas",
+          "cantidad": "0",
+          "tasa": "2.00",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "NOCT",
+          "nombre": "Recargo nocturno",
+          "tipo": "ingreso",
+          "base": "3.96",
+          "formula": "valor hora × 0.25 × horas nocturnas",
+          "cantidad": "0",
+          "tasa": "0.25",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "BONO",
+          "nombre": "Bono remunerativo",
+          "tipo": "ingreso",
+          "base": "0.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "IESS-P",
+          "nombre": "Aporte personal IESS",
+          "tipo": "descuento",
+          "base": "950.00",
+          "formula": "base aportable × 9.45%",
+          "cantidad": "1",
+          "tasa": "0.0945",
+          "resultado": "89.78",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "ANT",
+          "nombre": "Anticipo autorizado",
+          "tipo": "descuento",
+          "base": "50.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "50.00",
+          "fuenteId": "F-AUTORIZACION"
+        },
+        {
+          "codigo": "IESS-E",
+          "nombre": "Aporte patronal IESS",
+          "tipo": "obligacion",
+          "base": "950.00",
+          "formula": "base aportable × 11.15%",
+          "cantidad": "1",
+          "tasa": "0.1115",
+          "resultado": "105.93",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "D13",
+          "nombre": "Décimo tercero devengado",
+          "tipo": "ingreso",
+          "base": "950.00",
+          "formula": "remuneración computable / 12",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "79.17",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "D14",
+          "nombre": "Décimo cuarto devengado",
+          "tipo": "ingreso",
+          "base": "482.00",
+          "formula": "SBU / 12 × fracción del mes",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "40.17",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "FR",
+          "nombre": "Fondo de reserva",
+          "tipo": "ingreso",
+          "base": "950.00",
+          "formula": "base aportable × 8.33%",
+          "cantidad": "1",
+          "tasa": "0.0833",
+          "resultado": "79.14",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "VAC",
+          "nombre": "Provisión de vacaciones",
+          "tipo": "provision",
+          "base": "950.00",
+          "formula": "remuneración computable / 24",
+          "cantidad": "1",
+          "tasa": "0.0416666667",
+          "resultado": "39.58",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        }
+      ],
+      "totales": {
+        "remuneracionAportable": "950.00",
+        "remuneracionBruta": "1148.48",
+        "beneficiosPagadosDirectos": "198.48",
+        "descuentos": "139.78",
+        "netoProvisional": "1008.71",
+        "obligacionesPatronales": "105.93",
+        "provisionesYAcumulaciones": "39.58",
+        "costoDevengado": "1293.98",
+        "desembolso": "1114.63"
+      },
+      "alertas": [
+        "Retención de impuesto a la renta: cálculo definitivo requiere proyección anual y rebaja por gastos personales."
+      ]
+    },
+    {
+      "id": "ROL-PER-2026-10-VIG-006",
+      "versionCalculo": 1,
+      "periodoId": "PER-2026-10",
+      "trabajadorId": "VIG-006",
+      "estado": "calculado",
+      "conceptos": [
+        {
+          "codigo": "SUELDO",
+          "nombre": "Sueldo proporcional",
+          "tipo": "ingreso",
+          "base": "700.00",
+          "formula": "sueldo / 30 × días pagados",
+          "cantidad": "16",
+          "tasa": "1.00",
+          "resultado": "373.33",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HES",
+          "nombre": "Horas suplementarias",
+          "tipo": "ingreso",
+          "base": "2.92",
+          "formula": "valor hora × 1.50 × horas",
+          "cantidad": "0",
+          "tasa": "1.50",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "HEX",
+          "nombre": "Horas extraordinarias",
+          "tipo": "ingreso",
+          "base": "2.92",
+          "formula": "valor hora × 2.00 × horas",
+          "cantidad": "0",
+          "tasa": "2.00",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "NOCT",
+          "nombre": "Recargo nocturno",
+          "tipo": "ingreso",
+          "base": "2.92",
+          "formula": "valor hora × 0.25 × horas nocturnas",
+          "cantidad": "0",
+          "tasa": "0.25",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "BONO",
+          "nombre": "Bono remunerativo",
+          "tipo": "ingreso",
+          "base": "0.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "IESS-P",
+          "nombre": "Aporte personal IESS",
+          "tipo": "descuento",
+          "base": "373.33",
+          "formula": "base aportable × 9.45%",
+          "cantidad": "1",
+          "tasa": "0.0945",
+          "resultado": "35.28",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "ANT",
+          "nombre": "Anticipo autorizado",
+          "tipo": "descuento",
+          "base": "0.00",
+          "formula": "valor autorizado",
+          "cantidad": "1",
+          "tasa": "1.00",
+          "resultado": "0.00",
+          "fuenteId": "F-AUTORIZACION"
+        },
+        {
+          "codigo": "IESS-E",
+          "nombre": "Aporte patronal IESS",
+          "tipo": "obligacion",
+          "base": "373.33",
+          "formula": "base aportable × 11.15%",
+          "cantidad": "1",
+          "tasa": "0.1115",
+          "resultado": "41.63",
+          "fuenteId": "F-IESS-APORTES"
+        },
+        {
+          "codigo": "D13",
+          "nombre": "Décimo tercero devengado",
+          "tipo": "ingreso",
+          "base": "373.33",
+          "formula": "remuneración computable / 12",
+          "cantidad": "1",
+          "tasa": "0.0833333333",
+          "resultado": "31.11",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "D14",
+          "nombre": "Décimo cuarto devengado",
+          "tipo": "ingreso",
+          "base": "482.00",
+          "formula": "SBU / 12 × fracción del mes",
+          "cantidad": "0.5333333333333333333333333333",
+          "tasa": "0.0833333333",
+          "resultado": "21.42",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "FR",
+          "nombre": "Fondo de reserva",
+          "tipo": "acumulacion",
+          "base": "373.33",
+          "formula": "no cumple un año",
+          "cantidad": "1",
+          "tasa": "0",
+          "resultado": "0.00",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        },
+        {
+          "codigo": "VAC",
+          "nombre": "Provisión de vacaciones",
+          "tipo": "provision",
+          "base": "373.33",
+          "formula": "remuneración computable / 24",
+          "cantidad": "1",
+          "tasa": "0.0416666667",
+          "resultado": "15.56",
+          "fuenteId": "F-CODIGO-TRABAJO"
+        }
+      ],
+      "totales": {
+        "remuneracionAportable": "373.33",
+        "remuneracionBruta": "425.86",
+        "beneficiosPagadosDirectos": "52.53",
+        "descuentos": "35.28",
+        "netoProvisional": "390.58",
+        "obligacionesPatronales": "41.63",
+        "provisionesYAcumulaciones": "15.56",
+        "costoDevengado": "483.05",
+        "desembolso": "432.21"
+      },
+      "alertas": [
+        "Retención de impuesto a la renta: cálculo definitivo requiere proyección anual y rebaja por gastos personales."
+      ]
+    }
+  ],
+  "acumuladosBeneficios": [
+    {
+      "id": "ACU-NOTA-001",
+      "trabajadorId": "VIG-001",
+      "beneficio": "Décimo tercero",
+      "saldo": null,
+      "estado": "Pendiente",
+      "nota": "No se recibió historial real; no se proyecta como saldo devengado."
+    },
+    {
+      "id": "ACU-NOTA-002",
+      "trabajadorId": "VIG-001",
+      "beneficio": "Décimo cuarto",
+      "saldo": null,
+      "estado": "Pendiente",
+      "nota": "No se recibió historial real; no se proyecta como saldo devengado."
+    }
+  ],
+  "pagosBeneficios": [],
+  "vacaciones": [
+    {
+      "id": "VAC-001",
+      "trabajadorId": "VIG-001",
+      "devengadosDias": null,
+      "gozadosDias": null,
+      "anticipadosDias": null,
+      "saldoDias": null,
+      "estado": "Pendiente",
+      "nota": "Requiere historia de servicios y movimientos."
+    }
+  ],
+  "utilidades": [
+    {
+      "id": "UTI-2026",
+      "ejercicio": 2026,
+      "utilidadLiquida": null,
+      "estado": "Pendiente",
+      "nota": "No se inventan utilidades. Cargar cierre y cargas familiares acreditadas para repartir 10% y 5%."
+    }
+  ],
+  "usuarios": [
+    {
+      "id": "USR-ADMIN",
+      "nombre": "Administración Vigente",
+      "usuario": "admin.demo",
+      "passwordHash": "$2b$12$06JGN47obBdnwvlk.6Wt8uV9cIv12o4Us1yFLXi7d6O9.zqYwk2xe",
+      "rol": "administrador",
+      "estado": "activo"
+    },
+    {
+      "id": "USR-NOMINA",
+      "nombre": "Responsable de nómina",
+      "usuario": "nomina.demo",
+      "passwordHash": "$2b$12$06JGN47obBdnwvlk.6Wt8uV9cIv12o4Us1yFLXi7d6O9.zqYwk2xe",
+      "rol": "nomina",
+      "estado": "activo"
+    },
+    {
+      "id": "USR-CONSULTA",
+      "nombre": "Consulta",
+      "usuario": "consulta.demo",
+      "passwordHash": "$2b$12$06JGN47obBdnwvlk.6Wt8uV9cIv12o4Us1yFLXi7d6O9.zqYwk2xe",
+      "rol": "consulta",
+      "estado": "activo"
+    }
+  ],
+  "auditoria": [
+    {
+      "id": "AUD-INIT",
+      "fecha": "2026-10-27T09:00:00-05:00",
+      "actor": "sistema",
+      "operacion": "inicializar-datos-demo",
+      "versionAnterior": null,
+      "versionNueva": 1,
+      "nota": "Datos ficticios; sin identificaciones reales."
+    },
+    {
+      "id": "AUD-f275159f-3408-47e2-9176-611303e60ef3",
+      "fecha": "2026-10-27T18:28:03.453Z",
+      "actor": "nomina.demo",
+      "operacion": "calcular-nomina",
+      "versionAnterior": 1,
+      "versionNueva": 2
+    },
+    {
+      "id": "AUD-c3ff1918-647a-4cc1-aa45-cccbca9e0170",
+      "fecha": "2026-10-27T18:29:50.389Z",
+      "actor": "nomina.demo",
+      "operacion": "calcular-nomina",
+      "versionAnterior": 2,
+      "versionNueva": 3
+    }
+  ]
+}

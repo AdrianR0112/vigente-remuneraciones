@@ -1,0 +1,8 @@
+node_modules/
+.next/
+out/
+*.log
+data/backups/*.json
+data/*.tmp
+.env*
+!.env.example
