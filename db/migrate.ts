@@ -2,10 +2,12 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { loadEnvConfig } from "@next/env";
 import { Pool } from "pg";
+import { normalizePostgresUrl } from "../lib/postgres-url";
 
 loadEnvConfig(process.cwd());
-const connectionString = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL;
-if (!connectionString) throw new Error("Falta DATABASE_URL_UNPOOLED (o DATABASE_URL como alternativa local). No se ejecutó ninguna migración.");
+const rawConnectionString = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL;
+if (!rawConnectionString) throw new Error("Falta DATABASE_URL_UNPOOLED (o DATABASE_URL como alternativa local). No se ejecutó ninguna migración.");
+const connectionString = normalizePostgresUrl(rawConnectionString);
 
 const pool = new Pool({ connectionString, max: 1 });
 const migrationsDirectory = path.join(process.cwd(), "db", "migrations");

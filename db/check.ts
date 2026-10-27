@@ -1,9 +1,11 @@
 import { loadEnvConfig } from "@next/env";
 import { Pool } from "pg";
+import { normalizePostgresUrl } from "../lib/postgres-url";
 
 loadEnvConfig(process.cwd());
-const connectionString = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL;
-if (!connectionString) throw new Error("Falta DATABASE_URL_UNPOOLED o DATABASE_URL.");
+const rawConnectionString = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL;
+if (!rawConnectionString) throw new Error("Falta DATABASE_URL_UNPOOLED o DATABASE_URL.");
+const connectionString = normalizePostgresUrl(rawConnectionString);
 
 const pool = new Pool({ connectionString, max: 1 });
 

@@ -1,5 +1,6 @@
 import { attachDatabasePool } from "@vercel/functions";
 import { Pool, type PoolClient } from "pg";
+import { normalizePostgresUrl } from "./postgres-url";
 import { validateData, type VigenteData } from "./schema";
 import "server-only";
 
@@ -27,7 +28,7 @@ function connectionString() {
       "Falta DATABASE_URL. Conecte el recurso Neon al proyecto de Vercel y sincronice las variables de entorno.",
     );
   }
-  return value;
+  return normalizePostgresUrl(value);
 }
 
 export function databasePool() {

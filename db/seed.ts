@@ -2,11 +2,13 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadEnvConfig } from "@next/env";
 import { Pool } from "pg";
+import { normalizePostgresUrl } from "../lib/postgres-url";
 import { validateData } from "../lib/schema";
 
 loadEnvConfig(process.cwd());
-const connectionString = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL;
-if (!connectionString) throw new Error("Falta DATABASE_URL_UNPOOLED (o DATABASE_URL como alternativa local). No se cargaron datos.");
+const rawConnectionString = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL;
+if (!rawConnectionString) throw new Error("Falta DATABASE_URL_UNPOOLED (o DATABASE_URL como alternativa local). No se cargaron datos.");
+const connectionString = normalizePostgresUrl(rawConnectionString);
 
 const seedPath = path.join(process.cwd(), "db", "seed", "vigente.seed.json");
 const pool = new Pool({ connectionString, max: 1 });

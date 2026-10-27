@@ -23,6 +23,7 @@ import {
   Settings2,
   ShieldCheck,
   TableProperties,
+  Trash2,
   Upload,
   Users,
   X,
@@ -150,8 +151,8 @@ export function Dashboard() {
     return () => document.removeEventListener("keydown", closeOnEscape);
   }, [menuOpen]);
 
-  async function save(next: Data, operation: string) {
-    if (!data) return;
+  async function save(next: Data, operation: string): Promise<boolean> {
+    if (!data) return false;
     setBusy(true);
     setError("");
     try {
@@ -165,8 +166,10 @@ export function Dashboard() {
       setData(body);
       setToast("Cambios guardados en Neon");
       window.setTimeout(() => setToast(""), 3500);
+      return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo guardar");
+      return false;
     } finally {
       setBusy(false);
     }
@@ -318,15 +321,29 @@ function Recovery({ error, onRecovered }: { error: string; onRecovered: () => Pr
   return <section className="recovery"><CircleAlert /><h2>Neon necesita atención</h2><p>{error || "No se pudo consultar la base de datos."}</p><p>Compruebe las variables <code>DATABASE_URL</code> y <code>DATABASE_URL_UNPOOLED</code>, y ejecute las migraciones y la carga inicial.</p><button className="primary" onClick={() => void onRecovered()}><RefreshCw />Reintentar conexión</button></section>;
 }
 
-function Workers({ data, save, busy }: { data: Data; save: (data: Data, op: string) => Promise<void>; busy: boolean }) {
+function Workers({ data, save, busy }: { data: Data; save: (data: Data, op: string) => Promise<boolean>; busy: boolean }) {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("todos");
   const [editing, setEditing] = useState<Worker | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Worker | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
+  const deleteDialog = useRef<HTMLDialogElement>(null);
   const positions = Object.fromEntries(data.cargos.map((row) => [String(row.id), row]));
   const filtered = data.trabajadores.filter((worker) => (status === "todos" || worker.estado === status) && `${worker.nombre} ${worker.id} ${val(positions[worker.cargoId], "nombre")}`.toLowerCase().includes(query.toLowerCase()));
 
+  function relatedRecords(workerId: string) {
+    return [
+      { label: "contratos", count: data.contratos.filter((row) => row.trabajadorId === workerId).length },
+      { label: "cambios salariales", count: data.historialSalarial.filter((row) => row.trabajadorId === workerId).length },
+      { label: "novedades", count: data.novedades.filter((row) => row.trabajadorId === workerId).length },
+      { label: "roles de pago", count: data.rolesPago.filter((row) => row.trabajadorId === workerId).length },
+      { label: "acumulados", count: data.acumuladosBeneficios.filter((row) => row.trabajadorId === workerId).length },
+      { label: "vacaciones", count: data.vacaciones.filter((row) => row.trabajadorId === workerId).length },
+    ].filter((item) => item.count > 0);
+  }
+
   function open(worker: Worker) { setEditing({ ...worker }); window.setTimeout(() => dialog.current?.showModal(), 0); }
+  function askToDelete(worker: Worker) { setPendingDelete(worker); window.setTimeout(() => deleteDialog.current?.showModal(), 0); }
   function openNew() {
     const nextNumber = data.trabajadores.reduce((highest, worker) => {
       const number = Number(worker.id.match(/^VIG-(\d+)$/)?.[1] ?? 0);
@@ -361,22 +378,32 @@ function Workers({ data, save, busy }: { data: Data; save: (data: Data, op: stri
         ? data.trabajadores.map((worker) => worker.id === editing.id ? editing : worker)
         : [...data.trabajadores, editing],
     };
-    await save(next, `${exists ? "editar" : "crear"}-trabajador-${editing.id}`);
-    dialog.current?.close();
+    if (await save(next, `${exists ? "editar" : "crear"}-trabajador-${editing.id}`)) dialog.current?.close();
   }
+  async function removeWorker() {
+    if (!pendingDelete || relatedRecords(pendingDelete.id).length) return;
+    const next = { ...data, trabajadores: data.trabajadores.filter((worker) => worker.id !== pendingDelete.id) };
+    if (await save(next, `eliminar-trabajador-${pendingDelete.id}`)) deleteDialog.current?.close();
+  }
+
+  const pendingReferences = pendingDelete ? relatedRecords(pendingDelete.id) : [];
+  const pendingReferenceCount = pendingReferences.reduce((sum, item) => sum + item.count, 0);
 
   return (
     <div className="page-stack">
-      <section className="section-lead"><div><h2>Equipo de Vigente</h2><p>Los datos son ficticios. Los trabajadores con historial se inactivan; no se eliminan.</p></div><button className="primary" onClick={openNew}><Plus />Nuevo trabajador</button></section>
+      <section className="section-lead"><div><h2>Equipo de Vigente</h2><p>Puede eliminar registros sin actividad. Los trabajadores con historial deben conservarse como inactivos.</p></div><button className="primary" onClick={openNew}><Plus />Nuevo trabajador</button></section>
       <div className="toolbar"><label className="search"><Search /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por nombre, ID o cargo" /></label><select value={status} onChange={(event) => setStatus(event.target.value)} aria-label="Filtrar por estado"><option value="todos">Todos los estados</option><option value="activo">Activos</option><option value="inactivo">Inactivos</option></select></div>
       <section className="table-wrap">
         <table><thead><tr><th>Trabajador</th><th>Cargo / nivel</th><th>Ingreso</th><th>Modalidad</th><th className="num">Sueldo</th><th>Estado</th><th><span className="sr-only">Acciones</span></th></tr></thead>
-          <tbody>{filtered.map((worker) => <tr key={worker.id}><td><div className="person"><span>{worker.nombre.split(" ").map((part) => part[0]).join("").slice(0, 2)}</span><div><strong>{worker.nombre}</strong><small>{worker.id} · {worker.identificacionDemo}</small></div></div></td><td><strong>{val(positions[worker.cargoId], "nombre")}</strong><small className="cell-note">Nivel {val(positions[worker.cargoId], "nivel")}</small></td><td>{fmtDate(worker.fechaIngreso)}</td><td>{worker.modalidad}</td><td className="num money-cell">{fmtMoney(worker.sueldo)}</td><td><Tag tone={worker.estado}>{worker.estado}</Tag></td><td><button className="icon-btn" onClick={() => open(worker)} aria-label={`Editar a ${worker.nombre}`}><Pencil /></button></td></tr>)}</tbody>
+          <tbody>{filtered.map((worker) => <tr key={worker.id}><td><div className="person"><span>{worker.nombre.split(" ").map((part) => part[0]).join("").slice(0, 2)}</span><div><strong>{worker.nombre}</strong><small>{worker.id} · {worker.identificacionDemo}</small></div></div></td><td><strong>{val(positions[worker.cargoId], "nombre")}</strong><small className="cell-note">Nivel {val(positions[worker.cargoId], "nivel")}</small></td><td>{fmtDate(worker.fechaIngreso)}</td><td>{worker.modalidad}</td><td className="num money-cell">{fmtMoney(worker.sueldo)}</td><td><Tag tone={worker.estado}>{worker.estado}</Tag></td><td><div className="table-actions"><button className="icon-btn" onClick={() => open(worker)} aria-label={`Editar a ${worker.nombre}`}><Pencil /></button><button className="icon-btn danger-icon" onClick={() => askToDelete(worker)} aria-label={`Eliminar a ${worker.nombre}`}><Trash2 /></button></div></td></tr>)}</tbody>
         </table>
         {!filtered.length && <Empty title="No hay coincidencias" copy="Cambie la búsqueda o el filtro para volver a ver trabajadores." />}
       </section>
       <dialog ref={dialog} className="dialog" onClose={() => setEditing(null)}>
         {editing && <form onSubmit={submit}><div className="dialog-head"><div><h2>{data.trabajadores.some((worker) => worker.id === editing.id) ? "Editar trabajador" : "Nuevo trabajador"}</h2><p>{editing.id} · identificación demostrativa</p></div><button type="button" className="icon-btn" onClick={() => dialog.current?.close()} aria-label="Cerrar"><X /></button></div><div className="form-grid"><label>Nombre completo<input value={editing.nombre} onChange={(e) => setEditing({ ...editing, nombre: e.target.value })} minLength={3} required /></label><label>Identificación<input value={editing.identificacionDemo} readOnly /></label><label>Cargo<select value={editing.cargoId} onChange={(e) => setEditing({ ...editing, cargoId: e.target.value })} required>{data.cargos.map((cargo) => <option key={String(cargo.id)} value={String(cargo.id)}>{val(cargo, "nombre")}</option>)}</select></label><label>Departamento<select value={editing.departamentoId} onChange={(e) => setEditing({ ...editing, departamentoId: e.target.value })} required>{data.departamentos.map((department) => <option key={String(department.id)} value={String(department.id)}>{val(department, "nombre")}</option>)}</select></label><label>Ubicación<input value={editing.ubicacion} onChange={(e) => setEditing({ ...editing, ubicacion: e.target.value })} minLength={2} required /></label><label>Fecha de ingreso<input type="date" value={editing.fechaIngreso} onChange={(e) => setEditing({ ...editing, fechaIngreso: e.target.value })} required /></label><label>Sueldo mensual<input value={editing.sueldo} onChange={(e) => setEditing({ ...editing, sueldo: e.target.value })} inputMode="decimal" pattern="\d+\.\d{2}" title="Use dos decimales, por ejemplo 650.00" required /></label><label>Modalidad<select value={editing.modalidad} onChange={(e) => setEditing({ ...editing, modalidad: e.target.value })}><option>Presencial</option><option>Híbrida</option><option>Remota</option></select></label><label>Región del décimo cuarto<select value={editing.regionDecimoCuarto} onChange={(e) => setEditing({ ...editing, regionDecimoCuarto: e.target.value })}><option>Sierra/Amazonía</option><option>Costa/Insular</option></select></label><label>Estado<select value={editing.estado} onChange={(e) => setEditing({ ...editing, estado: e.target.value })}><option>activo</option><option>inactivo</option></select></label><label>Décimo tercero<select value={editing.decimoTercero} onChange={(e) => setEditing({ ...editing, decimoTercero: e.target.value })}><option>Mensual</option><option>Acumulado</option></select></label><label>Décimo cuarto<select value={editing.decimoCuarto} onChange={(e) => setEditing({ ...editing, decimoCuarto: e.target.value })}><option>Mensual</option><option>Acumulado</option></select></label><label>Fondo de reserva<select value={editing.fondoReserva} onChange={(e) => setEditing({ ...editing, fondoReserva: e.target.value })}><option>Pago directo</option><option>Acumula en IESS</option><option>No cumple antigüedad</option></select></label></div><div className="dialog-actions"><button type="button" className="secondary" onClick={() => dialog.current?.close()}>Cancelar</button><button className="primary" disabled={busy}>{busy ? "Guardando…" : "Guardar trabajador"}</button></div></form>}
+      </dialog>
+      <dialog ref={deleteDialog} className="dialog confirm-dialog" onClose={() => setPendingDelete(null)}>
+        {pendingDelete && <form method="dialog" onSubmit={(event) => { event.preventDefault(); void removeWorker(); }}><div className="dialog-head"><div><h2>{pendingReferenceCount ? "Este trabajador tiene historial" : "Eliminar trabajador"}</h2><p>{pendingDelete.id} · {pendingDelete.nombre}</p></div><button type="button" className="icon-btn" onClick={() => deleteDialog.current?.close()} aria-label="Cerrar"><X /></button></div>{pendingReferenceCount ? <div className="deletion-warning"><CircleAlert /><div><strong>No se puede eliminar sin perder trazabilidad.</strong><p>Hay {pendingReferenceCount} registros asociados: {pendingReferences.map((item) => `${item.count} ${item.label}`).join(", ")}. Cambie su estado a inactivo para conservar el historial laboral.</p></div></div> : <div className="deletion-warning clear"><Trash2 /><div><strong>Esta acción es permanente.</strong><p>El trabajador no tiene movimientos asociados. Se eliminará de Neon y la operación quedará registrada en auditoría.</p></div></div>}<div className="dialog-actions"><button type="button" className="secondary" onClick={() => deleteDialog.current?.close()}>{pendingReferenceCount ? "Entendido" : "Cancelar"}</button>{!pendingReferenceCount && <button className="danger" disabled={busy}><Trash2 />{busy ? "Eliminando…" : "Eliminar definitivamente"}</button>}</div></form>}
       </dialog>
     </div>
   );
@@ -396,11 +423,11 @@ function SalaryScale({ data }: { data: Data }) {
   return <div className="page-stack"><section className="section-lead"><div><h2>Tres capas, una decisión salarial</h2><p>El sueldo pactado se valida contra el mayor piso legal confirmado, sin convertir el mínimo sectorial en techo.</p></div></section><section className="layer-diagram"><div className="layer general"><span>SBU general</span><strong>$482,00</strong><small>Confirmado para 2026</small></div><div className="arrow">→</div><div className="layer sector"><span>Rama y ocupación</span><strong>Pendiente</strong><small>Comisión 12 · TIC</small></div><div className="arrow">→</div><div className="layer internal"><span>Banda + pacto</span><strong>$650–2.900</strong><small>Decisión interna simulada</small></div></section><section className="table-wrap"><table><thead><tr><th>Grupo</th><th>Niveles mostrados</th><th>Función</th><th>Procedencia</th></tr></thead><tbody>{data.escalasOcupacionales.map((row) => <tr key={val(row, "id")}><td><span className="group-letter">{val(row, "grupo")}</span></td><td>{(row.niveles as string[]).join(", ")}</td><td>{val(row, "funcion")}</td><td><Tag>{val(row, "estado")}</Tag></td></tr>)}</tbody></table></section><div className="split-grid"><section className="panel"><div className="panel-head"><div><h2>Referencias TIC 2026</h2><p>No se interpolan importes intermedios</p></div></div>{data.minimosSectoriales.map((row) => <div className="reference-row" key={val(row, "id")}><div><strong>Nivel {val(row, "nivel")}</strong><small>{val(row, "rama")}</small></div><b>{fmtMoney(row.minimo)}</b><Tag>{val(row, "estado")}</Tag></div>)}</section><section className="panel warning-panel"><CircleAlert /><div><h2>Contraste pendiente</h2><p>Falta confirmar la denominación y el código oficial de cada ocupación aplicable. Hasta entonces, la app muestra estas cifras como referencia académica y no certifica cumplimiento sectorial.</p></div></section></div></div>;
 }
 
-function Novelties({ data, save, busy }: { data: Data; save: (data: Data, op: string) => Promise<void>; busy: boolean }) {
+function Novelties({ data, save, busy }: { data: Data; save: (data: Data, op: string) => Promise<boolean>; busy: boolean }) {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState({ trabajadorId: "VIG-001", tipo: "hora_suplementaria", fecha: "2026-10-21", horas: "1.00", valor: "0.00", inicio: "18:00", fin: "19:00", observacion: "" });
   const workers = Object.fromEntries(data.trabajadores.map((worker) => [worker.id, worker.nombre]));
-  async function add(event: React.FormEvent) { event.preventDefault(); const isHour = draft.tipo.includes("hora") || draft.tipo === "recargo_nocturno"; const novelty = { id: `NOV-${crypto.randomUUID()}`, periodoId: "PER-2026-10", trabajadorId: draft.trabajadorId, tipo: draft.tipo, fecha: draft.fecha, ...(isHour ? { horas: draft.horas, inicio: draft.inicio, fin: draft.fin } : { valor: draft.valor }), aprobada: false, observacion: draft.observacion || "Registrada para revisión." }; await save({ ...data, novedades: [...data.novedades, novelty] }, "crear-novedad"); setOpen(false); }
+  async function add(event: React.FormEvent) { event.preventDefault(); const isHour = draft.tipo.includes("hora") || draft.tipo === "recargo_nocturno"; const novelty = { id: `NOV-${crypto.randomUUID()}`, periodoId: "PER-2026-10", trabajadorId: draft.trabajadorId, tipo: draft.tipo, fecha: draft.fecha, ...(isHour ? { horas: draft.horas, inicio: draft.inicio, fin: draft.fin } : { valor: draft.valor }), aprobada: false, observacion: draft.observacion || "Registrada para revisión." }; if (await save({ ...data, novedades: [...data.novedades, novelty] }, "crear-novedad")) setOpen(false); }
   return <div className="page-stack"><section className="section-lead"><div><h2>Movimientos de octubre</h2><p>Las horas se guardan con fecha, tramo horario, aprobación y evidencia.</p></div><button className="primary" onClick={() => setOpen(!open)}><Plus />Registrar novedad</button></section>{open && <form className="inline-form" onSubmit={add}><div className="form-grid"><label>Trabajador<select value={draft.trabajadorId} onChange={(e) => setDraft({ ...draft, trabajadorId: e.target.value })}>{data.trabajadores.map((worker) => <option key={worker.id} value={worker.id}>{worker.nombre}</option>)}</select></label><label>Tipo<select value={draft.tipo} onChange={(e) => setDraft({ ...draft, tipo: e.target.value })}><option value="hora_suplementaria">Hora suplementaria</option><option value="hora_extraordinaria">Hora extraordinaria</option><option value="recargo_nocturno">Recargo nocturno</option><option value="bono_remunerativo">Bono remunerativo</option><option value="anticipo">Anticipo</option></select></label><label>Fecha<input type="date" value={draft.fecha} onChange={(e) => setDraft({ ...draft, fecha: e.target.value })} required /></label><label>Horas<input value={draft.horas} onChange={(e) => setDraft({ ...draft, horas: e.target.value })} /></label><label>Valor<input value={draft.valor} onChange={(e) => setDraft({ ...draft, valor: e.target.value })} /></label><label>Observación<input value={draft.observacion} onChange={(e) => setDraft({ ...draft, observacion: e.target.value })} /></label></div><div className="dialog-actions"><button type="button" className="secondary" onClick={() => setOpen(false)}>Cancelar</button><button className="primary" disabled={busy}>{busy ? "Guardando…" : "Enviar a revisión"}</button></div></form>}<section className="table-wrap"><table><thead><tr><th>Fecha</th><th>Trabajador</th><th>Novedad</th><th>Tramo / cantidad</th><th>Estado</th><th>Observación</th></tr></thead><tbody>{data.novedades.map((row) => <tr key={val(row, "id")}><td>{fmtDate(row.fecha)}</td><td><strong>{workers[val(row, "trabajadorId")]}</strong><small className="cell-note">{val(row, "trabajadorId")}</small></td><td>{val(row, "tipo").replaceAll("_", " ")}</td><td>{row.horas ? `${val(row, "horas")} h · ${val(row, "inicio")}–${val(row, "fin")}` : fmtMoney(row.valor)}</td><td><Tag tone={row.aprobada ? "verificado" : "pendiente"}>{row.aprobada ? "Aprobada" : "Pendiente"}</Tag></td><td className="wide-cell">{val(row, "observacion")}</td></tr>)}</tbody></table></section></div>;
 }
 

@@ -110,6 +110,20 @@ export function validateData(input: unknown): VigenteData {
     if (!trabajadorIds.has(novelty.trabajadorId)) throw new Error(`Trabajador inexistente en ${novelty.id}`);
     if (!periodoIds.has(novelty.periodoId)) throw new Error(`Período inexistente en ${novelty.id}`);
   }
+  const workerLinkedCollections = [
+    data.contratos,
+    data.historialSalarial,
+    data.rolesPago,
+    data.acumuladosBeneficios,
+    data.pagosBeneficios,
+    data.vacaciones,
+  ];
+  for (const collection of workerLinkedCollections) {
+    for (const row of collection) {
+      const workerId = typeof row.trabajadorId === "string" ? row.trabajadorId : undefined;
+      if (workerId && !trabajadorIds.has(workerId)) throw new Error(`Trabajador inexistente en ${String(row.id ?? "registro relacionado")}`);
+    }
+  }
   return data;
 }
 

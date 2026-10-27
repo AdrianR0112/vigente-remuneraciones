@@ -40,3 +40,11 @@ test("no paga directamente beneficios acumulados ni depósitos IESS", async () =
   assert.equal(camila.totales.beneficiosPagadosDirectos, "0.00");
   assert.equal(camila.totales.remuneracionBruta, "2400.00");
 });
+
+test("impide eliminar trabajadores que conservan registros relacionados", async () => {
+  const data = await fixture();
+  assert.throws(
+    () => validateData({ ...data, trabajadores: data.trabajadores.filter((worker) => worker.id !== "VIG-001") }),
+    /Trabajador inexistente/,
+  );
+});
