@@ -6,3 +6,7 @@ data/backups/*.json
 data/*.tmp
 .env*
 !.env.example
+
+.vercel/
+.agents/
+skills-lock.json
