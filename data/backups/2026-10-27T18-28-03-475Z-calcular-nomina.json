@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "version": 1,
+  "updatedAt": "2026-10-27T09:00:00-05:00",
+  "empresa": {
+    "id": "EMP-VIGENTE",
+    "nombre": "Vigente",
+    "actividad": "Desarrollo y mantenimiento de software",
+    "sector": "Privado",
+    "sede": "Quito",
+    "region": "Sierra",
+    "zonaHoraria": "America/Guayaquil",
+    "moneda": "USD",
+    "identificadorDemo": "EMPRESA-DEMO-SIN-RUC"
+  },
+  "parametrosLegales": [
+    { "id": "PAR-SBU-2026", "codigo": "SBU", "nombre": "Salario básico unificado", "valor": "482.00", "unidad": "USD", "vigenteDesde": "2026-01-01", "vigenteHasta": "2026-12-31", "fuenteId": "F-SBU-2026", "estado": "Verificado" },
+    { "id": "PAR-IESS-P", "codigo": "IESS_PERSONAL", "nombre": "Aporte personal IESS", "valor": "0.0945", "unidad": "tasa", "vigenteDesde": "2026-01-01", "vigenteHasta": null, "fuenteId": "F-IESS-APORTES", "estado": "Verificado" },
+    { "id": "PAR-IESS-E", "codigo": "IESS_PATRONAL", "nombre": "Aporte patronal IESS", "valor": "0.1115", "unidad": "tasa", "vigenteDesde": "2026-01-01", "vigenteHasta": null, "fuenteId": "F-IESS-APORTES", "estado": "Verificado" },
+    { "id": "PAR-RESERVA", "codigo": "FONDO_RESERVA", "nombre": "Fondo de reserva referencial", "valor": "0.0833", "unidad": "tasa", "vigenteDesde": "2026-01-01", "vigenteHasta": null, "fuenteId": "F-CODIGO-TRABAJO", "estado": "Pendiente", "nota": "Tasa inicial del escenario; confirmar regla operativa de fracciones y reingresos antes de uso real." },
+    { "id": "PAR-SUPL", "codigo": "RECARGO_SUPLEMENTARIA", "nombre": "Factor de hora suplementaria", "valor": "1.50", "unidad": "factor", "vigenteDesde": "2026-01-01", "vigenteHasta": null, "fuenteId": "F-CODIGO-TRABAJO", "estado": "Verificado" },
+    { "id": "PAR-EXTRA", "codigo": "RECARGO_EXTRAORDINARIA", "nombre": "Factor de hora extraordinaria", "valor": "2.00", "unidad": "factor", "vigenteDesde": "2026-01-01", "vigenteHasta": null, "fuenteId": "F-CODIGO-TRABAJO", "estado": "Verificado" },
+    { "id": "PAR-NOC", "codigo": "RECARGO_NOCTURNO", "nombre": "Recargo nocturno ordinario", "valor": "0.25", "unidad": "tasa", "vigenteDesde": "2026-01-01", "vigenteHasta": null, "fuenteId": "F-CODIGO-TRABAJO", "estado": "Verificado" }
+  ],
+  "fuentesNormativas": [
+    { "id": "F-SBU-2026", "entidad": "Ministerio del Trabajo y Desarrollo Humano", "titulo": "Acuerdo de salario básico unificado 2026", "articulo": "Artículo único", "url": "https://www.trabajo.gob.ec/wp-content/plugins/download-monitor/download.php?force=1&id=4933", "consultadaEl": "2026-10-27", "vigencia": "Desde 2026-01-01", "estado": "Verificado", "nota": "Fija el SBU 2026 en USD 482.00." },
+    { "id": "F-IESS-APORTES", "entidad": "IESS", "titulo": "Aportes del trabajador privado bajo relación de dependencia", "articulo": null, "url": "https://www.iess.gob.ec/es/web/afiliado/servicios-y-prestaciones", "consultadaEl": "2026-10-27", "vigencia": "Consulta vigente", "estado": "Verificado", "nota": "Personal 9.45%; patronal 11.15%." },
+    { "id": "F-CODIGO-TRABAJO", "entidad": "Ministerio del Trabajo", "titulo": "Código del Trabajo", "articulo": "Arts. 47, 49, 55, 69, 95, 97, 111, 113 y 196", "url": "https://www.trabajo.gob.ec/wp-content/uploads/downloads/2024/01/CODIGO_DEL_TRABAJO.pdf", "consultadaEl": "2026-10-27", "vigencia": "Texto oficial disponible; verificar reformas posteriores por artículo", "estado": "Verificado" },
+    { "id": "F-HORARIOS-2026", "entidad": "Ministerio del Trabajo", "titulo": "Acuerdo Ministerial MDT-2026-059", "articulo": "Arts. 4 y 7", "url": "https://www.trabajo.gob.ec/wp-content/uploads/2026/03/2.7-ACUERDO-MINISTERIAL-MDT-2026-059.pdf", "consultadaEl": "2026-10-27", "vigencia": "2026", "estado": "Verificado", "nota": "Horarios especiales requieren condiciones, consentimiento y procedimiento; esta demostración usa jornada ordinaria." },
+    { "id": "F-SRI-IR-2026", "entidad": "SRI", "titulo": "Tabla de impuesto a la renta de personas naturales 2026", "articulo": "Resolución NAC-DGERCGC25-00000043", "url": "https://www.sri.gob.ec/o/sri-portlet-biblioteca-alfresco-internet/descargar/58a7f4f6-ab51-48b6-b9ff-a8e97e1a28ef/Tablas%20de%20c%C3%A1lculo%20de%20Impuesto%20a%20la%20Renta.pdf", "consultadaEl": "2026-10-27", "vigencia": "Ejercicio 2026", "estado": "Verificado", "nota": "La tabla está cargada; la retención individual queda pendiente hasta registrar proyección y gastos personales." },
+    { "id": "F-ACADEMICA-33", "entidad": "Material académico 3.3", "titulo": "Estructura salarial y orgánico funcional", "articulo": "Páginas 7 y 8, según transcripción del brief", "url": null, "consultadaEl": "2026-10-27", "vigencia": "Referencia académica", "estado": "Referencia académica", "nota": "El PDF no fue adjuntado al proyecto; no se inventaron importes intermedios." },
+    { "id": "F-AUTORIZACION", "entidad": "Vigente", "titulo": "Autorización interna demostrativa", "articulo": null, "url": null, "consultadaEl": "2026-10-27", "vigencia": "Período octubre 2026", "estado": "Simulado" }
+  ],
+  "escalasOcupacionales": [
+    { "id": "ESC-A", "grupo": "A", "niveles": ["A", "A1"], "funcion": "Jefatura", "fuenteId": "F-ACADEMICA-33", "estado": "Referencia académica", "nota": "A1 aparece como extremo superior TIC en la página 8; no existe A2 en la fuente transcrita." },
+    { "id": "ESC-B", "grupo": "B", "niveles": ["B1", "B2", "B3"], "funcion": "Supervisión", "fuenteId": "F-ACADEMICA-33", "estado": "Referencia académica" },
+    { "id": "ESC-C", "grupo": "C", "niveles": ["C1", "C2", "C3"], "funcion": "Operación", "fuenteId": "F-ACADEMICA-33", "estado": "Referencia académica" },
+    { "id": "ESC-D", "grupo": "D", "niveles": ["D1", "D2"], "funcion": "Asistencia", "fuenteId": "F-ACADEMICA-33", "estado": "Referencia académica" },
+    { "id": "ESC-E", "grupo": "E", "niveles": ["E1", "E2"], "funcion": "Soporte", "fuenteId": "F-ACADEMICA-33", "estado": "Referencia académica" }
+  ],
+  "minimosSectoriales": [
+    { "id": "MIN-TIC-E2-2026", "anio": 2026, "comision": "12", "rama": "Tecnología: Hardware y Software–TIC", "ocupacionOficial": null, "codigoOficial": null, "nivel": "E2", "minimo": "505.88", "fuenteId": "F-ACADEMICA-33", "vigencia": "2026", "estado": "Referencia académica", "nota": "Referencia de extremo inferior; pendiente de contraste oficial por ocupación." },
+    { "id": "MIN-TIC-A1-2026", "anio": 2026, "comision": "12", "rama": "Tecnología: Hardware y Software–TIC", "ocupacionOficial": null, "codigoOficial": null, "nivel": "A1", "minimo": "520.32", "fuenteId": "F-ACADEMICA-33", "vigencia": "2026", "estado": "Referencia académica", "nota": "No es un salario máximo empresarial. No se interpolan niveles intermedios." }
+  ],
+  "bandasInternas": [
+    { "id": "BANDA-A1", "cargoId": "CAR-JEF", "minimo": "2100.00", "referencia": "2400.00", "maximo": "2900.00", "estado": "Simulado" },
+    { "id": "BANDA-B1", "cargoId": "CAR-SUP", "minimo": "1600.00", "referencia": "1800.00", "maximo": "2200.00", "estado": "Simulado" },
+    { "id": "BANDA-C1", "cargoId": "CAR-BACK", "minimo": "1300.00", "referencia": "1500.00", "maximo": "1850.00", "estado": "Simulado" },
+    { "id": "BANDA-C2", "cargoId": "CAR-FRONT", "minimo": "1150.00", "referencia": "1350.00", "maximo": "1700.00", "estado": "Simulado" },
+    { "id": "BANDA-D1", "cargoId": "CAR-QA", "minimo": "850.00", "referencia": "1000.00", "maximo": "1250.00", "estado": "Simulado" },
+    { "id": "BANDA-E2", "cargoId": "CAR-SOP", "minimo": "650.00", "referencia": "750.00", "maximo": "950.00", "estado": "Simulado" }
+  ],
+  "departamentos": [
+    { "id": "DEP-TEC", "nombre": "Tecnología", "responsableTrabajadorId": "VIG-001", "estado": "activo" },
+    { "id": "DEP-ADM", "nombre": "Administración", "responsableTrabajadorId": null, "estado": "activo" }
+  ],
+  "cargos": [
+    { "id": "CAR-JEF", "nombre": "Jefa de Desarrollo de Software", "nivel": "A1", "departamentoId": "DEP-TEC", "superiorCargoId": null, "objetivo": "Dirigir la entrega técnica y la evolución del producto.", "funciones": ["Definir arquitectura", "Priorizar capacidad", "Acompañar al equipo"], "responsabilidades": ["Calidad técnica", "Planificación", "Riesgos"], "jornadaId": "HOR-ORD", "modalidades": ["Híbrida"], "criterioSueldo": "Liderazgo, arquitectura y responsabilidad transversal; banda interna simulada." },
+    { "id": "CAR-SUP", "nombre": "Supervisor de Desarrollo", "nivel": "B1", "departamentoId": "DEP-TEC", "superiorCargoId": "CAR-JEF", "objetivo": "Coordinar la ejecución diaria del equipo.", "funciones": ["Planificar iteraciones", "Revisar entregas", "Resolver bloqueos"], "responsabilidades": ["Flujo de entrega", "Coordinación"], "jornadaId": "HOR-ORD", "modalidades": ["Híbrida"], "criterioSueldo": "Coordinación y supervisión; banda interna simulada." },
+    { "id": "CAR-BACK", "nombre": "Desarrolladora Backend", "nivel": "C1", "departamentoId": "DEP-TEC", "superiorCargoId": "CAR-SUP", "objetivo": "Construir servicios seguros y mantenibles.", "funciones": ["Desarrollar APIs", "Modelar datos", "Automatizar pruebas"], "responsabilidades": ["Disponibilidad", "Seguridad de servicios"], "jornadaId": "HOR-ORD", "modalidades": ["Remota"], "criterioSueldo": "Especialización backend; banda interna simulada." },
+    { "id": "CAR-FRONT", "nombre": "Desarrollador Frontend", "nivel": "C2", "departamentoId": "DEP-TEC", "superiorCargoId": "CAR-SUP", "objetivo": "Crear interfaces accesibles y eficientes.", "funciones": ["Implementar interfaz", "Mantener componentes", "Probar accesibilidad"], "responsabilidades": ["Experiencia de usuario", "Calidad de interfaz"], "jornadaId": "HOR-ORD", "modalidades": ["Híbrida"], "criterioSueldo": "Desarrollo de interfaz; banda interna simulada." },
+    { "id": "CAR-QA", "nombre": "Asistente de QA y Pruebas", "nivel": "D1", "departamentoId": "DEP-TEC", "superiorCargoId": "CAR-SUP", "objetivo": "Prevenir defectos y documentar evidencia de calidad.", "funciones": ["Ejecutar pruebas", "Registrar hallazgos", "Preparar datos"], "responsabilidades": ["Evidencia de pruebas", "Trazabilidad"], "jornadaId": "HOR-ORD", "modalidades": ["Presencial"], "criterioSueldo": "Asistencia especializada; banda interna simulada." },
+    { "id": "CAR-SOP", "nombre": "Auxiliar de Soporte TI", "nivel": "E2", "departamentoId": "DEP-TEC", "superiorCargoId": "CAR-SUP", "objetivo": "Atender incidencias internas de primer nivel.", "funciones": ["Recibir tickets", "Preparar equipos", "Escalar incidentes"], "responsabilidades": ["Tiempos de respuesta", "Inventario asignado"], "jornadaId": "HOR-ORD", "modalidades": ["Presencial"], "criterioSueldo": "Soporte inicial; banda interna simulada." }
+  ],
+  "trabajadores": [
+    { "id": "VIG-001", "nombre": "Camila Torres", "cargoId": "CAR-JEF", "departamentoId": "DEP-TEC", "ubicacion": "Quito", "regionDecimoCuarto": "Sierra/Amazonía", "fechaIngreso": "2020-02-01", "sueldo": "2400.00", "estado": "activo", "modalidad": "Híbrida", "decimoTercero": "Acumulado", "decimoCuarto": "Acumulado", "fondoReserva": "Acumula en IESS", "identificacionDemo": "DEMO-VIG-001" },
+    { "id": "VIG-002", "nombre": "Andrés Molina", "cargoId": "CAR-SUP", "departamentoId": "DEP-TEC", "ubicacion": "Quito", "regionDecimoCuarto": "Sierra/Amazonía", "fechaIngreso": "2023-03-01", "sueldo": "1800.00", "estado": "activo", "modalidad": "Híbrida", "decimoTercero": "Mensual", "decimoCuarto": "Acumulado", "fondoReserva": "Pago directo", "identificacionDemo": "DEMO-VIG-002" },
+    { "id": "VIG-003", "nombre": "Daniela Ruiz", "cargoId": "CAR-BACK", "departamentoId": "DEP-TEC", "ubicacion": "Quito", "regionDecimoCuarto": "Sierra/Amazonía", "fechaIngreso": "2024-06-01", "sueldo": "1500.00", "estado": "activo", "modalidad": "Remota", "decimoTercero": "Mensual", "decimoCuarto": "Mensual", "fondoReserva": "Acumula en IESS", "identificacionDemo": "DEMO-VIG-003" },
+    { "id": "VIG-004", "nombre": "Mateo Salazar", "cargoId": "CAR-FRONT", "departamentoId": "DEP-TEC", "ubicacion": "Quito", "regionDecimoCuarto": "Sierra/Amazonía", "fechaIngreso": "2026-05-01", "sueldo": "1300.00", "estado": "activo", "modalidad": "Híbrida", "decimoTercero": "Acumulado", "decimoCuarto": "Mensual", "fondoReserva": "No cumple antigüedad", "identificacionDemo": "DEMO-VIG-004" },
+    { "id": "VIG-005", "nombre": "Valeria Paredes", "cargoId": "CAR-QA", "departamentoId": "DEP-TEC", "ubicacion": "Quito", "regionDecimoCuarto": "Sierra/Amazonía", "fechaIngreso": "2025-10-01", "sueldo": "950.00", "estado": "activo", "modalidad": "Presencial", "decimoTercero": "Mensual", "decimoCuarto": "Mensual", "fondoReserva": "Pago directo", "identificacionDemo": "DEMO-VIG-005" },
+    { "id": "VIG-006", "nombre": "Nicolás Vega", "cargoId": "CAR-SOP", "departamentoId": "DEP-TEC", "ubicacion": "Quito", "regionDecimoCuarto": "Sierra/Amazonía", "fechaIngreso": "2026-10-16", "sueldo": "700.00", "estado": "activo", "modalidad": "Presencial", "decimoTercero": "Mensual", "decimoCuarto": "Mensual", "fondoReserva": "No cumple antigüedad", "identificacionDemo": "DEMO-VIG-006" }
+  ],
+  "contratos": [
+    { "id": "CON-001", "trabajadorId": "VIG-001", "tipo": "Indefinido", "inicio": "2020-02-01", "jornada": "Completa", "estado": "vigente" },
+    { "id": "CON-002", "trabajadorId": "VIG-002", "tipo": "Indefinido", "inicio": "2023-03-01", "jornada": "Completa", "estado": "vigente" },
+    { "id": "CON-003", "trabajadorId": "VIG-003", "tipo": "Indefinido", "inicio": "2024-06-01", "jornada": "Completa", "estado": "vigente" },
+    { "id": "CON-004", "trabajadorId": "VIG-004", "tipo": "Indefinido", "inicio": "2026-05-01", "jornada": "Completa", "estado": "vigente" },
+    { "id": "CON-005", "trabajadorId": "VIG-005", "tipo": "Indefinido", "inicio": "2025-10-01", "jornada": "Completa", "estado": "vigente" },
+    { "id": "CON-006", "trabajadorId": "VIG-006", "tipo": "Indefinido", "inicio": "2026-10-16", "jornada": "Completa", "estado": "vigente" }
+  ],
+  "historialSalarial": [
+    { "id": "SAL-001", "trabajadorId": "VIG-001", "desde": "2026-01-01", "hasta": null, "sueldo": "2400.00", "estado": "Simulado" },
+    { "id": "SAL-002", "trabajadorId": "VIG-002", "desde": "2026-01-01", "hasta": null, "sueldo": "1800.00", "estado": "Simulado" },
+    { "id": "SAL-003", "trabajadorId": "VIG-003", "desde": "2026-01-01", "hasta": null, "sueldo": "1500.00", "estado": "Simulado" },
+    { "id": "SAL-004", "trabajadorId": "VIG-004", "desde": "2026-05-01", "hasta": null, "sueldo": "1300.00", "estado": "Simulado" },
+    { "id": "SAL-005", "trabajadorId": "VIG-005", "desde": "2026-01-01", "hasta": null, "sueldo": "950.00", "estado": "Simulado" },
+    { "id": "SAL-006", "trabajadorId": "VIG-006", "desde": "2026-10-16", "hasta": null, "sueldo": "700.00", "estado": "Simulado" }
+  ],
+  "horarios": [
+    { "id": "HOR-ORD", "nombre": "Jornada ordinaria diurna", "dias": ["lunes", "martes", "miércoles", "jueves", "viernes"], "inicio": "09:00", "fin": "18:00", "pausaMinutos": 60, "horasDiarias": "8.00", "horasSemanales": "40.00", "descanso": ["sábado", "domingo"], "tipo": "ordinario", "fuenteId": "F-CODIGO-TRABAJO" }
+  ],
+  "feriados": [
+    { "id": "FER-2026-10-09", "fecha": "2026-10-09", "nombre": "Independencia de Guayaquil", "alcance": "nacional", "trasladoAplicado": false, "estado": "Pendiente", "nota": "Validar calendario oficial y regla de traslado antes de clasificar horas." }
+  ],
+  "novedades": [
+    { "id": "NOV-001", "trabajadorId": "VIG-002", "periodoId": "PER-2026-10", "tipo": "hora_suplementaria", "fecha": "2026-10-06", "horas": "2.00", "inicio": "18:00", "fin": "20:00", "aprobada": true, "observacion": "Cierre de iteración; demostración." },
+    { "id": "NOV-002", "trabajadorId": "VIG-002", "periodoId": "PER-2026-10", "tipo": "hora_suplementaria", "fecha": "2026-10-13", "horas": "2.00", "inicio": "18:00", "fin": "20:00", "aprobada": true, "observacion": "Revisión de entrega; demostración." },
+    { "id": "NOV-003", "trabajadorId": "VIG-003", "periodoId": "PER-2026-10", "tipo": "hora_suplementaria", "fecha": "2026-10-05", "horas": "4.00", "inicio": "18:00", "fin": "22:00", "aprobada": true, "observacion": "Mantenimiento programado; demostración." },
+    { "id": "NOV-004", "trabajadorId": "VIG-003", "periodoId": "PER-2026-10", "tipo": "hora_suplementaria", "fecha": "2026-10-12", "horas": "4.00", "inicio": "18:00", "fin": "22:00", "aprobada": true, "observacion": "Mantenimiento programado; demostración." },
+    { "id": "NOV-005", "trabajadorId": "VIG-003", "periodoId": "PER-2026-10", "tipo": "hora_extraordinaria", "fecha": "2026-10-17", "horas": "4.00", "inicio": "09:00", "fin": "13:00", "aprobada": true, "observacion": "Incidente en descanso semanal; demostración." },
+    { "id": "NOV-006", "trabajadorId": "VIG-004", "periodoId": "PER-2026-10", "tipo": "bono_remunerativo", "fecha": "2026-10-20", "valor": "100.00", "aprobada": true, "observacion": "Bono remunerativo simulado con incidencia IESS y D13." },
+    { "id": "NOV-007", "trabajadorId": "VIG-005", "periodoId": "PER-2026-10", "tipo": "anticipo", "fecha": "2026-10-15", "valor": "50.00", "aprobada": true, "observacion": "Anticipo autorizado; respaldo interno simulado." }
+  ],
+  "periodos": [
+    { "id": "PER-2026-10", "nombre": "Octubre 2026", "inicio": "2026-10-01", "fin": "2026-10-31", "estado": "borrador", "versionCalculo": 0, "aprobadoAt": null, "pagadoAt": null, "cerradoAt": null }
+  ],
+  "rolesPago": [],
+  "acumuladosBeneficios": [
+    { "id": "ACU-NOTA-001", "trabajadorId": "VIG-001", "beneficio": "Décimo tercero", "saldo": null, "estado": "Pendiente", "nota": "No se recibió historial real; no se proyecta como saldo devengado." },
+    { "id": "ACU-NOTA-002", "trabajadorId": "VIG-001", "beneficio": "Décimo cuarto", "saldo": null, "estado": "Pendiente", "nota": "No se recibió historial real; no se proyecta como saldo devengado." }
+  ],
+  "pagosBeneficios": [],
+  "vacaciones": [
+    { "id": "VAC-001", "trabajadorId": "VIG-001", "devengadosDias": null, "gozadosDias": null, "anticipadosDias": null, "saldoDias": null, "estado": "Pendiente", "nota": "Requiere historia de servicios y movimientos." }
+  ],
+  "utilidades": [
+    { "id": "UTI-2026", "ejercicio": 2026, "utilidadLiquida": null, "estado": "Pendiente", "nota": "No se inventan utilidades. Cargar cierre y cargas familiares acreditadas para repartir 10% y 5%." }
+  ],
+  "usuarios": [
+    { "id": "USR-ADMIN", "nombre": "Administración Vigente", "usuario": "admin.demo", "passwordHash": "$2b$12$06JGN47obBdnwvlk.6Wt8uV9cIv12o4Us1yFLXi7d6O9.zqYwk2xe", "rol": "administrador", "estado": "activo" },
+    { "id": "USR-NOMINA", "nombre": "Responsable de nómina", "usuario": "nomina.demo", "passwordHash": "$2b$12$06JGN47obBdnwvlk.6Wt8uV9cIv12o4Us1yFLXi7d6O9.zqYwk2xe", "rol": "nomina", "estado": "activo" },
+    { "id": "USR-CONSULTA", "nombre": "Consulta", "usuario": "consulta.demo", "passwordHash": "$2b$12$06JGN47obBdnwvlk.6Wt8uV9cIv12o4Us1yFLXi7d6O9.zqYwk2xe", "rol": "consulta", "estado": "activo" }
+  ],
+  "auditoria": [
+    { "id": "AUD-INIT", "fecha": "2026-10-27T09:00:00-05:00", "actor": "sistema", "operacion": "inicializar-datos-demo", "versionAnterior": null, "versionNueva": 1, "nota": "Datos ficticios; sin identificaciones reales." }
+  ]
+}
