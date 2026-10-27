@@ -338,17 +338,47 @@ function Workers({ data, save, busy }: { data: Data; save: (data: Data, op: stri
   const filtered = data.trabajadores.filter((worker) => (status === "todos" || worker.estado === status) && `${worker.nombre} ${worker.id} ${val(positions[worker.cargoId], "nombre")}`.toLowerCase().includes(query.toLowerCase()));
 
   function open(worker: Worker) { setEditing({ ...worker }); window.setTimeout(() => dialog.current?.showModal(), 0); }
+  function openNew() {
+    const nextNumber = data.trabajadores.reduce((highest, worker) => {
+      const number = Number(worker.id.match(/^VIG-(\d+)$/)?.[1] ?? 0);
+      return Math.max(highest, number);
+    }, 0) + 1;
+    const id = `VIG-${String(nextNumber).padStart(3, "0")}`;
+    setEditing({
+      id,
+      nombre: "",
+      cargoId: String(data.cargos[0]?.id ?? ""),
+      departamentoId: String(data.departamentos[0]?.id ?? ""),
+      ubicacion: "Quito",
+      regionDecimoCuarto: "Sierra/Amazonía",
+      fechaIngreso: new Date().toISOString().slice(0, 10),
+      sueldo: "650.00",
+      estado: "activo",
+      modalidad: "Presencial",
+      decimoTercero: "Mensual",
+      decimoCuarto: "Mensual",
+      fondoReserva: "No cumple antigüedad",
+      identificacionDemo: `DEMO-${id}`,
+    });
+    window.setTimeout(() => dialog.current?.showModal(), 0);
+  }
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (!editing) return;
-    const next = { ...data, trabajadores: data.trabajadores.map((worker) => worker.id === editing.id ? editing : worker) };
-    await save(next, `editar-trabajador-${editing.id}`);
+    const exists = data.trabajadores.some((worker) => worker.id === editing.id);
+    const next = {
+      ...data,
+      trabajadores: exists
+        ? data.trabajadores.map((worker) => worker.id === editing.id ? editing : worker)
+        : [...data.trabajadores, editing],
+    };
+    await save(next, `${exists ? "editar" : "crear"}-trabajador-${editing.id}`);
     dialog.current?.close();
   }
 
   return (
     <div className="page-stack">
-      <section className="section-lead"><div><h2>Equipo de Vigente</h2><p>Los datos son ficticios. Los trabajadores con historial se inactivan; no se eliminan.</p></div><button className="primary" disabled title="La creación queda disponible mediante importación validada"><Plus />Nuevo trabajador</button></section>
+      <section className="section-lead"><div><h2>Equipo de Vigente</h2><p>Los datos son ficticios. Los trabajadores con historial se inactivan; no se eliminan.</p></div><button className="primary" onClick={openNew}><Plus />Nuevo trabajador</button></section>
       <div className="toolbar"><label className="search"><Search /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por nombre, ID o cargo" /></label><select value={status} onChange={(event) => setStatus(event.target.value)} aria-label="Filtrar por estado"><option value="todos">Todos los estados</option><option value="activo">Activos</option><option value="inactivo">Inactivos</option></select></div>
       <section className="table-wrap">
         <table><thead><tr><th>Trabajador</th><th>Cargo / nivel</th><th>Ingreso</th><th>Modalidad</th><th className="num">Sueldo</th><th>Estado</th><th><span className="sr-only">Acciones</span></th></tr></thead>
@@ -357,7 +387,7 @@ function Workers({ data, save, busy }: { data: Data; save: (data: Data, op: stri
         {!filtered.length && <Empty title="No hay coincidencias" copy="Cambie la búsqueda o el filtro para volver a ver trabajadores." />}
       </section>
       <dialog ref={dialog} className="dialog" onClose={() => setEditing(null)}>
-        {editing && <form onSubmit={submit}><div className="dialog-head"><div><h2>Editar trabajador</h2><p>{editing.nombre} · {editing.id}</p></div><button type="button" className="icon-btn" onClick={() => dialog.current?.close()} aria-label="Cerrar"><X /></button></div><div className="form-grid"><label>Nombre<input value={editing.nombre} onChange={(e) => setEditing({ ...editing, nombre: e.target.value })} required /></label><label>Sueldo mensual<input value={editing.sueldo} onChange={(e) => setEditing({ ...editing, sueldo: e.target.value })} pattern="\d+\.\d{2}" required /></label><label>Modalidad<select value={editing.modalidad} onChange={(e) => setEditing({ ...editing, modalidad: e.target.value })}><option>Presencial</option><option>Híbrida</option><option>Remota</option></select></label><label>Estado<select value={editing.estado} onChange={(e) => setEditing({ ...editing, estado: e.target.value })}><option>activo</option><option>inactivo</option></select></label><label>Décimo tercero<select value={editing.decimoTercero} onChange={(e) => setEditing({ ...editing, decimoTercero: e.target.value })}><option>Mensual</option><option>Acumulado</option></select></label><label>Décimo cuarto<select value={editing.decimoCuarto} onChange={(e) => setEditing({ ...editing, decimoCuarto: e.target.value })}><option>Mensual</option><option>Acumulado</option></select></label></div><div className="dialog-actions"><button type="button" className="secondary" onClick={() => dialog.current?.close()}>Cancelar</button><button className="primary" disabled={busy}>{busy ? "Guardando…" : "Guardar cambios"}</button></div></form>}
+        {editing && <form onSubmit={submit}><div className="dialog-head"><div><h2>{data.trabajadores.some((worker) => worker.id === editing.id) ? "Editar trabajador" : "Nuevo trabajador"}</h2><p>{editing.id} · identificación demostrativa</p></div><button type="button" className="icon-btn" onClick={() => dialog.current?.close()} aria-label="Cerrar"><X /></button></div><div className="form-grid"><label>Nombre completo<input value={editing.nombre} onChange={(e) => setEditing({ ...editing, nombre: e.target.value })} minLength={3} required /></label><label>Identificación<input value={editing.identificacionDemo} readOnly /></label><label>Cargo<select value={editing.cargoId} onChange={(e) => setEditing({ ...editing, cargoId: e.target.value })} required>{data.cargos.map((cargo) => <option key={String(cargo.id)} value={String(cargo.id)}>{val(cargo, "nombre")}</option>)}</select></label><label>Departamento<select value={editing.departamentoId} onChange={(e) => setEditing({ ...editing, departamentoId: e.target.value })} required>{data.departamentos.map((department) => <option key={String(department.id)} value={String(department.id)}>{val(department, "nombre")}</option>)}</select></label><label>Ubicación<input value={editing.ubicacion} onChange={(e) => setEditing({ ...editing, ubicacion: e.target.value })} minLength={2} required /></label><label>Fecha de ingreso<input type="date" value={editing.fechaIngreso} onChange={(e) => setEditing({ ...editing, fechaIngreso: e.target.value })} required /></label><label>Sueldo mensual<input value={editing.sueldo} onChange={(e) => setEditing({ ...editing, sueldo: e.target.value })} inputMode="decimal" pattern="\d+\.\d{2}" title="Use dos decimales, por ejemplo 650.00" required /></label><label>Modalidad<select value={editing.modalidad} onChange={(e) => setEditing({ ...editing, modalidad: e.target.value })}><option>Presencial</option><option>Híbrida</option><option>Remota</option></select></label><label>Región del décimo cuarto<select value={editing.regionDecimoCuarto} onChange={(e) => setEditing({ ...editing, regionDecimoCuarto: e.target.value })}><option>Sierra/Amazonía</option><option>Costa/Insular</option></select></label><label>Estado<select value={editing.estado} onChange={(e) => setEditing({ ...editing, estado: e.target.value })}><option>activo</option><option>inactivo</option></select></label><label>Décimo tercero<select value={editing.decimoTercero} onChange={(e) => setEditing({ ...editing, decimoTercero: e.target.value })}><option>Mensual</option><option>Acumulado</option></select></label><label>Décimo cuarto<select value={editing.decimoCuarto} onChange={(e) => setEditing({ ...editing, decimoCuarto: e.target.value })}><option>Mensual</option><option>Acumulado</option></select></label><label>Fondo de reserva<select value={editing.fondoReserva} onChange={(e) => setEditing({ ...editing, fondoReserva: e.target.value })}><option>Pago directo</option><option>Acumula en IESS</option><option>No cumple antigüedad</option></select></label></div><div className="dialog-actions"><button type="button" className="secondary" onClick={() => dialog.current?.close()}>Cancelar</button><button className="primary" disabled={busy}>{busy ? "Guardando…" : "Guardar trabajador"}</button></div></form>}
       </dialog>
     </div>
   );
