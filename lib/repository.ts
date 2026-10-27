@@ -1,77 +1,84 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import { attachDatabasePool } from "@vercel/functions";
+import { Pool, type PoolClient } from "pg";
 import { validateData, type VigenteData } from "./schema";
 import "server-only";
 
-const BUNDLED_DATA_PATH = path.join(process.cwd(), "data", "vigente.json");
-const DATA_PATH = process.env.VIGENTE_DATA_PATH
-  ? path.resolve(process.env.VIGENTE_DATA_PATH)
-  : process.env.VERCEL
-    ? path.join("/tmp", "vigente-remuneraciones", "vigente.json")
-    : BUNDLED_DATA_PATH;
-const BACKUP_DIR = path.join(path.dirname(DATA_PATH), "backups");
+const STATE_ID = "main";
 
-let writeQueue: Promise<unknown> = Promise.resolve();
+type GlobalDatabase = typeof globalThis & {
+  vigentePool?: Pool;
+  vigentePoolAttached?: boolean;
+};
 
-export class CorruptDataError extends Error {
-  constructor(public readonly filePath: string, message: string) {
+const globalDatabase = globalThis as GlobalDatabase;
+
+export class DataStoreError extends Error {
+  constructor(public readonly code: "configuracion" | "sin_inicializar" | "lectura", message: string) {
     super(message);
-    this.name = "CorruptDataError";
+    this.name = "DataStoreError";
   }
 }
 
-async function ensureDirectories() {
-  await fs.mkdir(path.dirname(DATA_PATH), { recursive: true });
-  await fs.mkdir(BACKUP_DIR, { recursive: true });
-  if (DATA_PATH !== BUNDLED_DATA_PATH) {
-    try {
-      await fs.access(DATA_PATH);
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-      await fs.copyFile(BUNDLED_DATA_PATH, DATA_PATH);
-    }
+function connectionString() {
+  const value = process.env.DATABASE_URL;
+  if (!value) {
+    throw new DataStoreError(
+      "configuracion",
+      "Falta DATABASE_URL. Conecte el recurso Neon al proyecto de Vercel y sincronice las variables de entorno.",
+    );
   }
+  return value;
 }
 
-export async function readData(): Promise<VigenteData> {
-  await ensureDirectories();
+export function databasePool() {
+  if (!globalDatabase.vigentePool) {
+    globalDatabase.vigentePool = new Pool({
+      connectionString: connectionString(),
+      max: 10,
+      min: 1,
+      idleTimeoutMillis: 5_000,
+      connectionTimeoutMillis: 10_000,
+    });
+  }
+  if (!globalDatabase.vigentePoolAttached) {
+    attachDatabasePool(globalDatabase.vigentePool);
+    globalDatabase.vigentePoolAttached = true;
+  }
+  return globalDatabase.vigentePool;
+}
+
+function parseDocument(value: unknown): VigenteData {
   try {
-    const raw = await fs.readFile(DATA_PATH, "utf8");
-    return validateData(JSON.parse(raw));
+    return validateData(typeof value === "string" ? JSON.parse(value) : value);
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-      throw new CorruptDataError(DATA_PATH, "No existe el archivo persistente. Restaure un respaldo o instale los datos iniciales.");
-    }
-    throw new CorruptDataError(
-      DATA_PATH,
-      `El archivo se conservó sin cambios. ${error instanceof Error ? error.message : "JSON inválido"}`,
+    throw new DataStoreError(
+      "lectura",
+      `El registro principal de Neon no cumple el esquema: ${error instanceof Error ? error.message : "dato inválido"}`,
     );
   }
 }
 
-function stamp() {
-  return new Date().toISOString().replace(/[:.]/g, "-");
+async function currentRow(client: Pool | PoolClient, forUpdate = false) {
+  const result = await client.query(
+    `SELECT document, version FROM vigente_state WHERE id = $1${forUpdate ? " FOR UPDATE" : ""}`,
+    [STATE_ID],
+  );
+  const row = result.rows[0];
+  if (!row) {
+    throw new DataStoreError(
+      "sin_inicializar",
+      "La base de datos está conectada pero no tiene datos iniciales. Ejecute npm run db:migrate y npm run db:seed.",
+    );
+  }
+  return { data: parseDocument(row.document), version: Number(row.version) };
 }
 
-async function backupCurrent(reason: string) {
-  try {
-    await fs.copyFile(DATA_PATH, path.join(BACKUP_DIR, `${stamp()}-${reason}.json`));
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+export async function readData(): Promise<VigenteData> {
+  const current = await currentRow(databasePool());
+  if (current.data.version !== current.version) {
+    throw new DataStoreError("lectura", "La versión del documento no coincide con la versión de control en Neon.");
   }
-}
-
-async function atomicReplace(data: VigenteData, reason: string) {
-  await ensureDirectories();
-  await backupCurrent(reason);
-  const temporary = `${DATA_PATH}.${process.pid}.${Date.now()}.tmp`;
-  await fs.writeFile(temporary, `${JSON.stringify(data, null, 2)}\n`, { encoding: "utf8", flag: "wx" });
-  try {
-    await fs.rename(temporary, DATA_PATH);
-  } catch (error) {
-    await fs.rm(temporary, { force: true });
-    throw error;
-  }
+  return current.data;
 }
 
 export async function writeData(
@@ -80,80 +87,73 @@ export async function writeData(
   actor = "sistema",
   operation = "actualizar",
 ): Promise<VigenteData> {
-  const task = writeQueue.then(async () => {
-    const current = await readData();
+  const client = await databasePool().connect();
+  try {
+    await client.query("BEGIN");
+    const current = await currentRow(client, true);
     if (current.version !== expectedVersion) {
       throw new Error(`CONFLICT:${current.version}`);
     }
+
     const source = input as Record<string, unknown>;
     const suppliedUsers = Array.isArray(source.usuarios) ? source.usuarios as Array<Record<string, unknown>> : [];
     const users = suppliedUsers.map((user) => {
       if (typeof user.passwordHash === "string" && user.passwordHash !== "[PROTEGIDO]") return user;
-      const currentUser = current.usuarios.find((row) => row.id === user.id);
+      const currentUser = current.data.usuarios.find((row) => row.id === user.id);
       return currentUser ? { ...user, passwordHash: currentUser.passwordHash } : user;
     });
+    const updatedAt = new Date().toISOString();
     const candidate = validateData({
       ...source,
       usuarios: users,
       schemaVersion: 1,
       version: current.version + 1,
-      updatedAt: new Date().toISOString(),
+      updatedAt,
     });
     candidate.auditoria.push({
       id: `AUD-${crypto.randomUUID()}`,
-      fecha: candidate.updatedAt,
+      fecha: updatedAt,
       actor,
       operacion: operation,
       versionAnterior: current.version,
       versionNueva: candidate.version,
     });
-    await atomicReplace(candidate, operation.replace(/[^a-z0-9_-]/gi, "-").toLowerCase());
+
+    const result = await client.query(
+      `UPDATE vigente_state
+       SET document = $1::jsonb, version = $2, updated_at = $3
+       WHERE id = $4 AND version = $5`,
+      [JSON.stringify(candidate), candidate.version, updatedAt, STATE_ID, current.version],
+    );
+    if (result.rowCount !== 1) throw new Error(`CONFLICT:${current.version}`);
+    await client.query("COMMIT");
     return candidate;
-  });
-  writeQueue = task.catch(() => undefined);
-  return task;
-}
-
-export async function importData(input: unknown, expectedVersion: number, actor = "administrador") {
-  const validated = validateData(input);
-  return writeData(validated, expectedVersion, actor, "importar-json");
-}
-
-export async function listBackups() {
-  await ensureDirectories();
-  const files = await fs.readdir(BACKUP_DIR);
-  return files.filter((file) => file.endsWith(".json")).sort().reverse();
-}
-
-export async function restoreBackup(fileName: string, expectedVersion: number) {
-  if (path.basename(fileName) !== fileName || !fileName.endsWith(".json")) throw new Error("Nombre de respaldo inválido");
-  const raw = await fs.readFile(path.join(BACKUP_DIR, fileName), "utf8");
-  const backup = validateData(JSON.parse(raw));
-  try {
-    await readData();
-    return writeData(backup, expectedVersion, "administrador", `restaurar-${fileName}`);
   } catch (error) {
-    if (!(error instanceof CorruptDataError)) throw error;
-    const recovered = validateData({
-      ...backup,
-      version: backup.version + 1,
-      updatedAt: new Date().toISOString(),
-      auditoria: [
-        ...backup.auditoria,
-        {
-          id: `AUD-${crypto.randomUUID()}`,
-          fecha: new Date().toISOString(),
-          actor: "administrador",
-          operacion: "restaurar-archivo-danado",
-          versionAnterior: null,
-          versionNueva: backup.version + 1,
-          respaldo: fileName,
-        },
-      ],
-    });
-    await atomicReplace(recovered, "recuperacion-archivo-danado");
-    return recovered;
+    await client.query("ROLLBACK").catch(() => undefined);
+    throw error;
+  } finally {
+    client.release();
   }
 }
 
-export const repositoryInfo = { dataPath: DATA_PATH, backupDir: BACKUP_DIR };
+export async function importData(input: unknown, expectedVersion: number, actor = "administrador") {
+  return writeData(input, expectedVersion, actor, "importar-datos");
+}
+
+export async function databaseStatus() {
+  const startedAt = performance.now();
+  const result = await databasePool().query(
+    "SELECT version, updated_at FROM vigente_state WHERE id = $1",
+    [STATE_ID],
+  );
+  return {
+    connected: true,
+    provider: "Neon Postgres",
+    table: "public.vigente_state",
+    version: result.rows[0] ? Number(result.rows[0].version) : null,
+    updatedAt: result.rows[0]?.updated_at ?? null,
+    latencyMs: Math.round(performance.now() - startedAt),
+  };
+}
+
+export const repositoryInfo = { provider: "Neon Postgres", table: "public.vigente_state" };

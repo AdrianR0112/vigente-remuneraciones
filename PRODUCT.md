@@ -8,11 +8,11 @@ web
 
 ## Stack
 
-Next.js con TypeScript, API del servidor Node.js y persistencia local en archivos JSON. Esta elección fue indicada por el usuario; el proyecto debe ejecutarse localmente y no se publicará como sitio alojado.
+Next.js con TypeScript, API del servidor Node.js y persistencia en Neon Postgres, preparada para Vercel Functions.
 
 ## Users
 
-- Administrador de la empresa simulada Vigente, responsable de configuración, usuarios y respaldo.
+- Administrador de la empresa simulada Vigente, responsable de configuración, usuarios y datos.
 - Responsable de nómina, que registra novedades, calcula, revisa, aprueba, paga y cierra períodos.
 - Usuario de consulta, que revisa trabajadores, roles y reportes sin modificar datos.
 
@@ -22,7 +22,7 @@ Gestionar de forma trazable la remuneración de una empresa privada ecuatoriana 
 
 ## Positioning
 
-El cálculo conserva una instantánea de parámetros y entradas por versión de nómina, y presenta cada resultado con base, fórmula, tasa, incidencia y fuente. La persistencia es un único archivo JSON versionado, validado y protegido mediante escrituras atómicas y respaldos.
+El cálculo conserva una instantánea de parámetros y entradas por versión de nómina, y presenta cada resultado con base, fórmula, tasa, incidencia y fuente. La persistencia usa un registro JSONB versionado en Neon, validado y protegido por transacciones PostgreSQL.
 
 ## Operating Context
 
@@ -30,9 +30,9 @@ Uso interno en español, principalmente en escritorio, con revisiones ocasionale
 
 ## Capabilities and Constraints
 
-- Datos persistentes en `data/vigente.json`; sin base de datos, servicios externos ni localStorage como fuente de verdad.
-- Seis trabajadores ficticios, cargos editables, organigrama, escala salarial, novedades, nómina, beneficios, reportes, parámetros y respaldo/importación JSON.
-- Validación integral, control de versión, serialización de escrituras, respaldo previo, restauración y manejo explícito de corrupción.
+- Datos persistentes en Neon Postgres; sin archivos locales ni `localStorage` como fuente de verdad.
+- Seis trabajadores ficticios, cargos editables, organigrama, escala salarial, novedades, nómina, beneficios, reportes, parámetros e importación/exportación portable.
+- Validación integral, control de versión, transacciones, bloqueo de fila y manejo explícito de fallos de conexión o esquema.
 - Aritmética monetaria decimal con redondeo HALF_UP a dos decimales.
 - Estados y fuentes distinguen `Verificado`, `Referencia académica`, `Simulado` y `Pendiente`.
 - Los períodos aprobados o cerrados quedan protegidos; aprobar y pagar son operaciones separadas.
@@ -55,7 +55,7 @@ Nombre: «Vigente | Remuneraciones». Voz profesional, clara y prudente. La inte
 2. Lo pendiente se muestra como pendiente; nunca se rellena con certeza inventada.
 3. La operación diaria debe ser rápida, pero los cambios sensibles dejan auditoría.
 4. La vista de costo devengado y la de desembolsos nunca se mezclan.
-5. Los datos históricos se conservan mediante inactivación, versiones y respaldos.
+5. Los datos históricos se conservan mediante inactivación, versiones y auditoría.
 
 ## Accessibility & Inclusion
 

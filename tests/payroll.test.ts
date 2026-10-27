@@ -5,11 +5,11 @@ import { calculatePayroll } from "../lib/payroll";
 import { validateData } from "../lib/schema";
 
 async function fixture() {
-  const raw = await readFile(new URL("../data/vigente.json", import.meta.url), "utf8");
+  const raw = await readFile(new URL("../db/seed/vigente.seed.json", import.meta.url), "utf8");
   return validateData(JSON.parse(raw));
 }
 
-test("valida el JSON inicial y sus referencias", async () => {
+test("valida los datos iniciales y sus referencias", async () => {
   const data = await fixture();
   assert.equal(data.trabajadores.length, 6);
   assert.equal(data.novedades.length, 7);

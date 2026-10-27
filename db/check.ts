@@ -1,0 +1,15 @@
+import { loadEnvConfig } from "@next/env";
+import { Pool } from "pg";
+
+loadEnvConfig(process.cwd());
+const connectionString = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL;
+if (!connectionString) throw new Error("Falta DATABASE_URL_UNPOOLED o DATABASE_URL.");
+
+const pool = new Pool({ connectionString, max: 1 });
+try {
+  const result = await pool.query("SELECT version, updated_at FROM vigente_state WHERE id = 'main'");
+  if (!result.rows[0]) throw new Error("La tabla existe, pero falta el registro principal. Ejecute npm run db:seed.");
+  console.log(`Neon operativo · versión ${result.rows[0].version} · actualizado ${new Date(result.rows[0].updated_at).toISOString()}`);
+} finally {
+  await pool.end();
+}

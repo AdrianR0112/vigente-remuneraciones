@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { CorruptDataError, importData, readData, writeData } from "@/lib/repository";
+import { DataStoreError, importData, readData, writeData } from "@/lib/repository";
 import { redactSecrets } from "@/lib/schema";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 function problem(error: unknown) {
-  if (error instanceof CorruptDataError) {
-    return NextResponse.json({ error: "archivo_danado", message: error.message, path: error.filePath }, { status: 500 });
+  if (error instanceof DataStoreError) {
+    return NextResponse.json({ error: error.code, message: error.message }, { status: error.code === "sin_inicializar" ? 503 : 500 });
   }
   if (error instanceof ZodError) {
-    return NextResponse.json({ error: "validacion", message: "El JSON no cumple el esquema.", issues: error.issues }, { status: 422 });
+    return NextResponse.json({ error: "validacion", message: "Los datos no cumplen el esquema.", issues: error.issues }, { status: 422 });
   }
   const message = error instanceof Error ? error.message : "Error inesperado";
   if (message.startsWith("CONFLICT:")) {

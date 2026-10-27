@@ -1,37 +1,67 @@
 # Vigente | Remuneraciones
 
-Aplicación demostrativa de nómina privada ecuatoriana construida con Next.js, TypeScript y persistencia real en `data/vigente.json`.
+Aplicación demostrativa de nómina privada ecuatoriana construida con Next.js, TypeScript y Neon Postgres. No guarda datos operativos en archivos: Vercel Functions lee y escribe el registro principal en `public.vigente_state`.
 
-## Ejecutar
+## Configuración local
 
-```bash
+1. Instale dependencias y prepare las variables:
+
+```powershell
 npm install
+Copy-Item .env.example .env.local
+```
+
+2. En `.env.local`, configure:
+
+- `DATABASE_URL`: conexión agrupada de Neon (`-pooler`), usada por la aplicación.
+- `DATABASE_URL_UNPOOLED`: conexión directa, usada por migraciones y carga inicial.
+
+3. Cree el esquema, cargue los datos de demostración y compruebe la conexión:
+
+```powershell
+npm run db:migrate
+npm run db:seed
+npm run db:check
 npm run dev
 ```
 
-Abra `http://localhost:3000`. El archivo JSON se lee y escribe únicamente en el servidor; no se publica desde `public/`.
+Abra `http://localhost:3000`.
+
+La carga inicial de `db/seed/vigente.seed.json` es un recurso estático de instalación. La aplicación nunca lo modifica ni lo usa como fuente de verdad después de inicializar Neon.
+
+## Vercel + Neon
+
+La opción recomendada es conectar Neon desde Vercel Marketplace al proyecto. La integración inyecta automáticamente las variables de conexión en Development, Preview y Production.
+
+Flujo de despliegue:
+
+```powershell
+vercel link
+vercel integration add neon
+vercel env pull .env.local
+npm run db:migrate
+npm run db:seed
+vercel --prod
+```
+
+Si el recurso ya existe, conéctelo al proyecto en Vercel y ejecute `vercel env pull .env.local`; no cree una segunda base. La carga inicial usa `ON CONFLICT DO NOTHING`, por lo que no reemplaza información existente.
+
+## Persistencia y seguridad
+
+- Las escrituras se ejecutan en una transacción PostgreSQL y bloquean el registro principal durante la actualización.
+- Cada escritura exige `version`; un cambio concurrente devuelve HTTP 409.
+- El pool usa `attachDatabasePool` para el ciclo de vida de Vercel Functions.
+- Las credenciales permanecen en variables de servidor y nunca usan el prefijo `NEXT_PUBLIC_`.
+- Las exportaciones JSON son instantáneas portables y omiten hashes de contraseña.
+- Los usuarios de demostración contienen hashes bcrypt, nunca contraseñas en texto plano.
 
 ## Comandos de verificación
 
-```bash
+```powershell
 npm run typecheck
 npm test
 npm run build
 ```
-
-## Persistencia y seguridad
-
-- Las escrituras se serializan, validan y guardan primero en un temporal; después se reemplaza el archivo.
-- Antes de reemplazar o importar se guarda una copia en `data/backups/`.
-- Cada escritura exige `version` y devuelve conflicto HTTP 409 cuando otra operación ya modificó los datos.
-- Un JSON dañado no se borra ni se reinicia. La API responde con diagnóstico y lista los respaldos restaurables.
-- Los usuarios de demostración contienen hashes bcrypt, nunca contraseñas en texto plano.
-
-### Despliegue en Vercel
-
-El sistema de archivos del despliegue es de solo lectura. Cuando detecta Vercel, la aplicación copia el JSON inicial a `/tmp/vigente-remuneraciones/` para permitir altas, ediciones y respaldos durante la vida de la instancia. Ese directorio es temporal y puede reiniciarse en un nuevo despliegue o instancia.
-
-Para conservar cambios entre reinicios, configure `VIGENTE_DATA_PATH` con la ruta de un volumen persistente compatible con el proveedor. En Vercel estándar, una base de datos o un servicio de almacenamiento externo es necesario para persistencia real; `/tmp` evita el `EROFS`, pero no sustituye ese almacenamiento.
 
 ## Convenciones de cálculo
 

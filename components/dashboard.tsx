@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ArchiveRestore,
   BadgeDollarSign,
   BriefcaseBusiness,
   Calculator,
@@ -10,6 +9,7 @@ import {
   ChevronDown,
   CircleAlert,
   Download,
+  Database,
   FileJson,
   FileText,
   Gauge,
@@ -84,7 +84,7 @@ const NAV = [
   ["beneficios", "Beneficios", Landmark],
   ["reportes", "Reportes", FileText],
   ["parametros", "Parámetros", Settings2],
-  ["respaldo", "Respaldo JSON", ArchiveRestore],
+  ["respaldo", "Base de datos", Database],
 ] as const;
 
 const money = new Intl.NumberFormat("es-EC", { style: "currency", currency: "USD" });
@@ -163,7 +163,7 @@ export function Dashboard() {
       const body = await response.json();
       if (!response.ok) throw new Error(response.status === 409 ? "Los datos cambiaron en otra operación. Recargue y vuelva a intentar." : body.message ?? "No se pudo guardar.");
       setData(body);
-      setToast("Cambios guardados y respaldados");
+      setToast("Cambios guardados en Neon");
       window.setTimeout(() => setToast(""), 3500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo guardar");
@@ -217,7 +217,7 @@ export function Dashboard() {
         </nav>
         <div className="sidebar-foot">
           <ShieldCheck aria-hidden="true" />
-          <div><strong>Datos locales</strong><small>JSON · versión {data?.version ?? "—"}</small></div>
+          <div><strong>Neon Postgres</strong><small>Base de datos · versión {data?.version ?? "—"}</small></div>
         </div>
       </aside>
 
@@ -250,7 +250,7 @@ export function Dashboard() {
               {section === "beneficios" && <Benefits data={data} />}
               {section === "reportes" && <Reports data={data} />}
               {section === "parametros" && <Parameters data={data} />}
-              {section === "respaldo" && <Backups data={data} onImported={setData} />}
+              {section === "respaldo" && <DatabaseSettings data={data} onImported={setData} />}
             </>
           ) : <Recovery error={error} onRecovered={load} />}
         </div>
@@ -315,18 +315,7 @@ function Summary({ data, setSection }: { data: Data; setSection: (section: strin
 }
 
 function Recovery({ error, onRecovered }: { error: string; onRecovered: () => Promise<void> }) {
-  const [files, setFiles] = useState<string[]>([]);
-  const [message, setMessage] = useState("");
-  useEffect(() => { fetch("/api/backups").then((response) => response.json()).then((body) => setFiles(body.backups ?? [])).catch(() => setFiles([])); }, []);
-  async function restore(fileName: string) {
-    setMessage("Restaurando una copia validada…");
-    const response = await fetch("/api/backups", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fileName, expectedVersion: 0 }) });
-    const body = await response.json();
-    if (!response.ok) { setMessage(body.message ?? "No se pudo restaurar el respaldo."); return; }
-    setMessage("Restauración completa.");
-    await onRecovered();
-  }
-  return <section className="recovery"><CircleAlert /><h2>El archivo principal necesita atención</h2><p>{error || "El JSON no se puede validar."} No se borró ni se reinició automáticamente.</p>{message && <div className="alert info">{message}</div>}<div className="backup-list">{files.map((file) => <div key={file}><span><FileJson /></span><div><strong>{file}</strong><small>Copia validable</small></div><button className="primary" onClick={() => void restore(file)}><ArchiveRestore />Restaurar</button></div>)}</div>{!files.length && <p>No hay respaldos disponibles. Corrija el archivo conservado o importe uno válido desde el sistema de archivos.</p>}</section>;
+  return <section className="recovery"><CircleAlert /><h2>Neon necesita atención</h2><p>{error || "No se pudo consultar la base de datos."}</p><p>Compruebe las variables <code>DATABASE_URL</code> y <code>DATABASE_URL_UNPOOLED</code>, y ejecute las migraciones y la carga inicial.</p><button className="primary" onClick={() => void onRecovered()}><RefreshCw />Reintentar conexión</button></section>;
 }
 
 function Workers({ data, save, busy }: { data: Data; save: (data: Data, op: string) => Promise<void>; busy: boolean }) {
@@ -400,7 +389,7 @@ function Positions({ data }: { data: Data }) {
   const supervisor = data.trabajadores.find((worker) => worker.id === "VIG-002")!;
   const team = data.trabajadores.filter((worker) => !["VIG-001", "VIG-002"].includes(worker.id));
   const Node = ({ worker }: { worker: Worker }) => <div className="org-node"><span>{val(cargos[worker.cargoId], "nivel")}</span><strong>{worker.nombre}</strong><small>{val(cargos[worker.cargoId], "nombre")}</small></div>;
-  return <div className="page-stack"><section className="section-lead"><div><h2>Estructura ocupacional</h2><p>La línea de reporte y las fichas de cargo son editables en la fuente JSON validada.</p></div><Tag tone="simulado">Propuesta interna</Tag></section><section className="org-chart"><Node worker={chief} /><div className="org-line" /><Node worker={supervisor} /><div className="org-branches">{team.map((worker) => <Node key={worker.id} worker={worker} />)}</div></section><section className="position-list"><div className="panel-head"><div><h2>Fichas de cargo</h2><p>Objetivo, funciones, responsabilidades y criterio salarial</p></div></div>{data.cargos.map((cargo) => <details key={val(cargo, "id")}><summary><div><Tag tone="nivel">{val(cargo, "nivel")}</Tag><strong>{val(cargo, "nombre")}</strong></div><ChevronDown /></summary><div className="position-detail"><div><small>Objetivo</small><p>{val(cargo, "objetivo")}</p></div><div><small>Funciones</small><ul>{(cargo.funciones as string[]).map((item) => <li key={item}>{item}</li>)}</ul></div><div><small>Responsabilidades</small><ul>{(cargo.responsabilidades as string[]).map((item) => <li key={item}>{item}</li>)}</ul></div><div><small>Criterio de sueldo</small><p>{val(cargo, "criterioSueldo")}</p></div></div></details>)}</section><p className="footnote">Responsable del área: {workers["VIG-001"]?.nombre}. La jefatura no excluye automáticamente el pago de horas adicionales.</p></div>;
+  return <div className="page-stack"><section className="section-lead"><div><h2>Estructura ocupacional</h2><p>La línea de reporte y las fichas de cargo son editables y se guardan en Neon.</p></div><Tag tone="simulado">Propuesta interna</Tag></section><section className="org-chart"><Node worker={chief} /><div className="org-line" /><Node worker={supervisor} /><div className="org-branches">{team.map((worker) => <Node key={worker.id} worker={worker} />)}</div></section><section className="position-list"><div className="panel-head"><div><h2>Fichas de cargo</h2><p>Objetivo, funciones, responsabilidades y criterio salarial</p></div></div>{data.cargos.map((cargo) => <details key={val(cargo, "id")}><summary><div><Tag tone="nivel">{val(cargo, "nivel")}</Tag><strong>{val(cargo, "nombre")}</strong></div><ChevronDown /></summary><div className="position-detail"><div><small>Objetivo</small><p>{val(cargo, "objetivo")}</p></div><div><small>Funciones</small><ul>{(cargo.funciones as string[]).map((item) => <li key={item}>{item}</li>)}</ul></div><div><small>Responsabilidades</small><ul>{(cargo.responsabilidades as string[]).map((item) => <li key={item}>{item}</li>)}</ul></div><div><small>Criterio de sueldo</small><p>{val(cargo, "criterioSueldo")}</p></div></div></details>)}</section><p className="footnote">Responsable del área: {workers["VIG-001"]?.nombre}. La jefatura no excluye automáticamente el pago de horas adicionales.</p></div>;
 }
 
 function SalaryScale({ data }: { data: Data }) {
@@ -433,20 +422,29 @@ function Benefits({ data }: { data: Data }) {
 function Reports({ data }: { data: Data }) {
   function csv() { const rows = [["ID", "Nombre", "Sueldo", "Modalidad"], ...data.trabajadores.map((w) => [w.id, w.nombre, w.sueldo, w.modalidad])]; const text = rows.map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")).join("\n"); const url = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" })); const a = document.createElement("a"); a.href = url; a.download = "vigente-trabajadores.csv"; a.click(); URL.revokeObjectURL(url); }
   const reports = ["Rol individual imprimible", "Consolidado mensual", "Aportes IESS separados", "Décimos y reserva", "Vacaciones", "Costo por departamento", "Diferencias frente a pisos", "Auditoría"];
-  return <div className="page-stack"><section className="section-lead"><div><h2>Centro de reportes</h2><p>Exportaciones internas para revisión; no ejecutan declaraciones, pagos ni trámites oficiales.</p></div><div className="button-row"><button className="secondary" onClick={csv}><Download />CSV</button><a className="primary button-link" href="/api/export"><FileJson />JSON completo</a></div></section><section className="report-grid">{reports.map((name, index) => <button key={name} disabled={index > 1}><span><TableProperties /></span><div><strong>{name}</strong><small>{index <= 1 ? "Disponible" : "Preparado para datos completos"}</small></div><ChevronDown /></button>)}</section><section className="panel"><div className="panel-head"><div><h2>Auditoría reciente</h2><p>{data.auditoria.length} movimientos registrados</p></div></div><div className="audit-list">{data.auditoria.slice(-6).reverse().map((row) => <div key={val(row, "id")}><span className="audit-dot" /><div><strong>{val(row, "operacion").replaceAll("-", " ")}</strong><small>{val(row, "actor")} · {fmtDate(row.fecha)}</small></div><b>v{val(row, "versionNueva")}</b></div>)}</div></section></div>;
+  return <div className="page-stack"><section className="section-lead"><div><h2>Centro de reportes</h2><p>Exportaciones internas para revisión; no ejecutan declaraciones, pagos ni trámites oficiales.</p></div><div className="button-row"><button className="secondary" onClick={csv}><Download />CSV</button><a className="primary button-link" href="/api/export"><FileJson />Instantánea JSON</a></div></section><section className="report-grid">{reports.map((name, index) => <button key={name} disabled={index > 1}><span><TableProperties /></span><div><strong>{name}</strong><small>{index <= 1 ? "Disponible" : "Preparado para datos completos"}</small></div><ChevronDown /></button>)}</section><section className="panel"><div className="panel-head"><div><h2>Auditoría reciente</h2><p>{data.auditoria.length} movimientos registrados</p></div></div><div className="audit-list">{data.auditoria.slice(-6).reverse().map((row) => <div key={val(row, "id")}><span className="audit-dot" /><div><strong>{val(row, "operacion").replaceAll("-", " ")}</strong><small>{val(row, "actor")} · {fmtDate(row.fecha)}</small></div><b>v{val(row, "versionNueva")}</b></div>)}</div></section></div>;
 }
 
 function Parameters({ data }: { data: Data }) {
   return <div className="page-stack"><section className="section-lead"><div><h2>Parámetros centralizados</h2><p>Ninguna tasa legal vive dispersa dentro de la interfaz. Cada valor registra vigencia, fuente y estado.</p></div><Tag tone="verificado">{data.parametrosLegales.length} reglas</Tag></section><section className="table-wrap"><table><thead><tr><th>Parámetro</th><th>Valor</th><th>Vigencia</th><th>Fuente</th><th>Estado</th></tr></thead><tbody>{data.parametrosLegales.map((row) => <tr key={val(row, "id")}><td><strong>{val(row, "nombre")}</strong><small className="cell-note">{val(row, "codigo")}</small></td><td className="money-cell">{val(row, "unidad") === "tasa" ? `${Number(row.valor) * 100}%` : val(row, "valor")}</td><td>{fmtDate(row.vigenteDesde)}{row.vigenteHasta ? ` – ${fmtDate(row.vigenteHasta)}` : ""}</td><td>{val(row, "fuenteId")}</td><td><Tag>{val(row, "estado")}</Tag></td></tr>)}</tbody></table></section><section className="source-list"><div className="panel-head"><div><h2>Registro de fuentes</h2><p>Consulta: 27 de octubre de 2026</p></div></div>{data.fuentesNormativas.map((row) => <div key={val(row, "id")}><div className="source-icon"><BriefcaseBusiness /></div><div><strong>{val(row, "titulo")}</strong><small>{val(row, "entidad")} · {val(row, "articulo") || "Sin artículo específico"}</small><p>{val(row, "nota")}</p></div><div><Tag>{val(row, "estado")}</Tag>{row.url ? <a href={String(row.url)} target="_blank" rel="noreferrer">Abrir fuente</a> : <span>Sin archivo adjunto</span>}</div></div>)}</section></div>;
 }
 
-function Backups({ data, onImported }: { data: Data; onImported: (data: Data) => void }) {
+type DatabaseState = {
+  connected: boolean;
+  provider?: string;
+  table?: string;
+  version?: number | null;
+  updatedAt?: string | null;
+  latencyMs?: number;
+  message?: string;
+};
+
+function DatabaseSettings({ data, onImported }: { data: Data; onImported: (data: Data) => void }) {
   const [preview, setPreview] = useState<{ name: string; content: Data } | null>(null);
-  const [backups, setBackups] = useState<string[]>([]);
   const [message, setMessage] = useState("");
-  useEffect(() => { fetch("/api/backups").then((r) => r.json()).then((body) => setBackups(body.backups ?? [])).catch(() => undefined); }, [data.version]);
+  const [database, setDatabase] = useState<DatabaseState>({ connected: false });
+  useEffect(() => { fetch("/api/database", { cache: "no-store" }).then((r) => r.json()).then((body) => setDatabase(body)).catch(() => setDatabase({ connected: false, message: "No se pudo consultar el estado." })); }, [data.version]);
   async function pick(event: React.ChangeEvent<HTMLInputElement>) { const file = event.target.files?.[0]; if (!file) return; try { const parsed = JSON.parse(await file.text()) as Data; setPreview({ name: file.name, content: parsed }); setMessage(""); } catch { setMessage("El archivo no contiene JSON válido. No se modificó la fuente actual."); } }
-  async function importNow() { if (!preview) return; const response = await fetch("/api/data?mode=import", { method: "PUT", headers: { "Content-Type": "application/json", "If-Match": String(data.version) }, body: JSON.stringify({ data: preview.content }) }); const body = await response.json(); if (!response.ok) { setMessage(body.message ?? "La validación rechazó el archivo."); return; } onImported(body); setPreview(null); setMessage("Importación completada. Se creó un respaldo de la versión anterior."); }
-  async function restore(fileName: string) { const response = await fetch("/api/backups", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fileName, expectedVersion: data.version }) }); const body = await response.json(); if (response.ok) { onImported(body); setMessage(`Respaldo ${fileName} restaurado.`); } else setMessage(body.message ?? "No se pudo restaurar."); }
-  return <div className="page-stack"><section className="section-lead"><div><h2>La fuente de verdad está protegida</h2><p>`data/vigente.json` permanece fuera de archivos públicos y usa reemplazo atómico.</p></div><a className="primary button-link" href="/api/export"><Download />Exportar versión {data.version}</a></section>{message && <div className="alert info"><CircleAlert /><span>{message}</span></div>}<div className="split-grid"><section className="panel import-panel"><Upload /><h2>Importar JSON completo</h2><p>Primero se lee y muestra una vista previa. El servidor valida esquema, IDs y referencias antes de reemplazar.</p><label className="file-picker">Elegir archivo<input type="file" accept="application/json,.json" onChange={pick} /></label>{preview && <div className="import-preview"><strong>{preview.name}</strong><span>Esquema v{String(preview.content.schemaVersion ?? "?")} · {preview.content.trabajadores?.length ?? 0} trabajadores · versión declarada {preview.content.version ?? "?"}</span><button className="primary" onClick={() => void importNow()}>Validar y reemplazar</button></div>}</section><section className="panel"><div className="panel-head"><div><h2>Integridad</h2><p>Estado del repositorio</p></div><Tag tone="verificado">Operativo</Tag></div><div className="integrity-list"><div><Check /><span>Esquema y referencias validados</span></div><div><Check /><span>Control optimista por versión</span></div><div><Check /><span>Cola de escrituras serializada</span></div><div><Check /><span>Respaldo antes de reemplazar</span></div></div></section></div><section className="panel"><div className="panel-head"><div><h2>Respaldos disponibles</h2><p>Copias locales recuperables</p></div><FileJson /></div>{backups.length ? <div className="backup-list">{backups.slice(0, 12).map((file) => <div key={file}><span><FileJson /></span><div><strong>{file}</strong><small>JSON local</small></div><button className="secondary" onClick={() => void restore(file)}><ArchiveRestore />Restaurar</button></div>)}</div> : <Empty title="Aún no hay respaldos" copy="El primero se creará automáticamente antes de la siguiente escritura o importación." />}</section></div>;
+  async function importNow() { if (!preview) return; const response = await fetch("/api/data?mode=import", { method: "PUT", headers: { "Content-Type": "application/json", "If-Match": String(data.version) }, body: JSON.stringify({ data: preview.content }) }); const body = await response.json(); if (!response.ok) { setMessage(body.message ?? "La validación rechazó el archivo."); return; } onImported(body); setPreview(null); setMessage("Importación completada y guardada en Neon."); }
+  return <div className="page-stack"><section className="section-lead"><div><h2>Persistencia en Neon Postgres</h2><p>Todas las lecturas y escrituras operativas usan la base de datos conectada a Vercel.</p></div><a className="primary button-link" href="/api/export"><Download />Exportar versión {data.version}</a></section>{message && <div className="alert info"><CircleAlert /><span>{message}</span></div>}<div className="split-grid"><section className="panel import-panel"><Upload /><h2>Importar instantánea JSON</h2><p>JSON queda disponible solo como formato de intercambio. El servidor valida el esquema y guarda el resultado en Neon.</p><label className="file-picker">Elegir archivo<input type="file" accept="application/json,.json" onChange={pick} /></label>{preview && <div className="import-preview"><strong>{preview.name}</strong><span>Esquema v{String(preview.content.schemaVersion ?? "?")} · {preview.content.trabajadores?.length ?? 0} trabajadores · versión declarada {preview.content.version ?? "?"}</span><button className="primary" onClick={() => void importNow()}>Validar y guardar en Neon</button></div>}</section><section className="panel"><div className="panel-head"><div><h2>Integridad</h2><p>Control transaccional</p></div><Tag tone={database.connected ? "verificado" : "pendiente"}>{database.connected ? "Operativo" : "Sin conexión"}</Tag></div><div className="integrity-list"><div><Check /><span>Esquema y referencias validados</span></div><div><Check /><span>Control optimista por versión</span></div><div><Check /><span>Escrituras dentro de transacciones</span></div><div><Check /><span>Credenciales solo en el servidor</span></div></div></section></div><section className="panel"><div className="panel-head"><div><h2>Estado de la base de datos</h2><p>Conexión agrupada para Vercel Functions</p></div><Database /></div><div className="backup-list"><div><span><Database /></span><div><strong>{database.provider ?? "Neon Postgres"}</strong><small>{database.table ?? "public.vigente_state"}</small></div><Tag tone={database.connected ? "verificado" : "pendiente"}>{database.connected ? `${database.latencyMs ?? 0} ms` : "Revisar"}</Tag></div><div><span><GitBranch /></span><div><strong>Versión {database.version ?? data.version}</strong><small>{database.updatedAt ? `Actualizada ${fmtDate(database.updatedAt)}` : database.message ?? "Estado sincronizado con la aplicación"}</small></div><Tag tone="simulado">JSONB</Tag></div></div></section></div>;
 }

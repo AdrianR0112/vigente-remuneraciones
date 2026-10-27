@@ -1,17 +1,21 @@
-# Versionado y migraciones del JSON
+# Migraciones de Neon Postgres
 
-La propiedad raíz `schemaVersion` identifica la forma del documento; `version` controla concurrencia y aumenta en cada escritura.
+El esquema vive en `db/migrations/`. Cada archivo SQL se aplica una sola vez y queda registrado en `_vigente_migrations`.
 
-## Versión 1
+## Esquema inicial
 
-Versión inicial. Incluye todas las colecciones exigidas, dinero como cadenas con dos decimales, tasas como cadenas decimales y fechas calendario ISO `YYYY-MM-DD`.
+`0001_vigente_state.sql` crea `public.vigente_state`, una tabla singleton con:
 
-## Política de migración
+- `id = 'main'` como clave estable.
+- `document jsonb` para el estado validado de la aplicación.
+- `version bigint` para control optimista de concurrencia.
+- `updated_at timestamptz` para trazabilidad operativa.
 
-1. El servidor lee el archivo sin modificarlo y valida `schemaVersion`.
-2. Una futura migración debe transformar una copia en memoria, validar el documento completo y crear un respaldo del original.
-3. Solo después de la validación se escribe un temporal y se reemplaza el archivo de forma atómica.
-4. La migración añade una entrada de auditoría con versiones de esquema y de datos.
-5. Si la transformación falla, el archivo original permanece intacto y la aplicación ofrece restauración; nunca reinicia datos silenciosamente.
+## Procedimiento
 
-No existen migraciones anteriores a la versión 1.
+1. Use `DATABASE_URL_UNPOOLED` para evitar que una migración atraviese el pooler.
+2. Ejecute `npm run db:migrate`.
+3. En una instalación vacía, ejecute `npm run db:seed` una sola vez.
+4. Compruebe el resultado con `npm run db:check`.
+
+La carga inicial no sobrescribe el registro `main`. Las modificaciones posteriores deben entrar por el repositorio de la aplicación, que valida el documento, incrementa `version`, añade auditoría y confirma todo dentro de una transacción.
